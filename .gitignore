@@ -16,6 +16,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.env
 
 npm-debug.log*
 yarn-debug.log*
@@ -26,3 +27,6 @@ yarn-error.log*
 .vscode
 *.swp
 *.swo
+
+# Nested dependencies are not needed in source commits.
+/server/node_modules/
