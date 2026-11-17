@@ -316,12 +316,12 @@ const OptionsButtons = styled.div`
 
 const OptionButton = styled.button`
   padding: 10px 20px;
-  background: ${(props) => props.active ? 
+  background: ${(props) => props.$active ? 
     `linear-gradient(145deg, ${props.theme === 'light' ? lightTheme.primary : darkTheme.primary}, ${props.theme === 'light' ? lightTheme.secondary : darkTheme.secondary})` : 
     props.theme === 'light' ? 
       `linear-gradient(145deg, ${lightTheme.gradientStart}, ${lightTheme.gradientEnd})` : 
       `linear-gradient(145deg, ${darkTheme.gradientStart}, ${darkTheme.gradientEnd})`};
-  color: ${(props) => props.active ? 
+  color: ${(props) => props.$active ? 
     props.theme === 'light' ? darkTheme.text : lightTheme.text : 
     props.theme === 'light' ? lightTheme.text : darkTheme.text};
   border: none;
@@ -330,19 +330,19 @@ const OptionButton = styled.button`
   font-weight: 600;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  box-shadow: ${props => props.active ?
+  box-shadow: ${props => props.$active ?
     props.theme === 'light' ?
       `6px 6px 12px ${lightTheme.shadowDark}, -6px -6px 12px ${lightTheme.shadowLight}` :
       `6px 6px 12px ${darkTheme.shadowDark}, -6px -6px 12px ${darkTheme.shadowLight}` :
     props.theme === 'light' ?
       `inset 4px 4px 8px ${lightTheme.shadowDark}, inset -4px -4px 8px ${lightTheme.shadowLight}` :
       `inset 4px 4px 8px ${darkTheme.shadowDark}, inset -4px -4px 8px ${darkTheme.shadowLight}`};
-  transform: ${props => props.active ? 'scale(1.05)' : 'scale(1)'};
+  transform: ${props => props.$active ? 'scale(1.05)' : 'scale(1)'};
   min-width: 120px;
   
   &:hover {
-    transform: ${props => props.active ? 'scale(1.08)' : 'scale(1.03)'};
-    box-shadow: ${props => props.active ?
+    transform: ${props => props.$active ? 'scale(1.08)' : 'scale(1.03)'};
+    box-shadow: ${props => props.$active ?
       props.theme === 'light' ?
         `8px 8px 16px ${lightTheme.shadowDark}, -8px -8px 16px ${lightTheme.shadowLight}` :
         `8px 8px 16px ${darkTheme.shadowDark}, -8px -8px 16px ${darkTheme.shadowLight}` :
@@ -390,7 +390,7 @@ const PlayerColorButton = styled.div`
       '8px 8px 16px #1c1f22, -8px -8px 16px #34393f'};
   }
 
-  ${props => props.active && css`
+  ${props => props.$active && css`
     transform: scale(1.05) translateZ(10px) rotateX(5deg);
     box-shadow: 
       0 0 15px ${props.color}40,
@@ -438,7 +438,7 @@ const ColorIndicator = styled.div`
     transition: all 0.3s ease;
   }
 
-  ${props => props.active && css`
+  ${props => props.$active && css`
     animation: ${wobble} 2s ease-in-out infinite;
     &::before {
       content: '';
@@ -474,7 +474,7 @@ const PlayerName = styled.span`
 
 const GridCell = styled.div`
   background: ${props => {
-    if (props.active) return props.color;
+    if (props.$active) return props.color;
     return props.theme === 'light' ? 
       'linear-gradient(145deg, #ffffff, #f0f0f0)' : 
       'linear-gradient(145deg, #2c3138, #23272b)';
@@ -504,12 +504,12 @@ const GridCell = styled.div`
     right: -10px;
     bottom: -10px;
     border-radius: 2px;
-    background: ${props => props.active ? `${props.color}40` : 'transparent'};
-    animation: ${props => props.active ? ripple : 'none'} 1.5s ease-out infinite;
+    background: ${props => props.$active ? `${props.color}40` : 'transparent'};
+    animation: ${props => props.$active ? ripple : 'none'} 1.5s ease-out infinite;
     z-index: -1;
   }
 
-  ${props => props.isCritical && css`
+  ${props => props.$isCritical && css`
     animation: ${wobble} 1s ease-in-out infinite;
     &::after {
       animation: ${shockwave} 1.5s ease-out infinite;
@@ -770,7 +770,7 @@ const WelcomePage = ({ onEnter, theme, setTheme }) => {
           <GridCell
             key={`${i}-${j}`}
             capacity={capacity}
-            isCritical={isCritical}
+            $isCritical={isCritical}
             color={PLAYER_COLORS[1]}
             theme={theme}
             onMouseEnter={() => setActiveCell({ row: i, col: j })}
@@ -808,7 +808,7 @@ const WelcomePage = ({ onEnter, theme, setTheme }) => {
                   {gridSizeOptions.map((size) => (
                     <OptionButton
                       key={size.label}
-                      active={selectedGridSize.rows === size.rows && selectedGridSize.cols === size.cols}
+                      $active={selectedGridSize.rows === size.rows && selectedGridSize.cols === size.cols}
                       onClick={() => setSelectedGridSize({ rows: size.rows, cols: size.cols })}
                       theme={theme}
                     >
@@ -825,7 +825,7 @@ const WelcomePage = ({ onEnter, theme, setTheme }) => {
                     <PlayerColorButton
                       key={index + 1}
                       color={PLAYER_COLORS[index + 1]}
-                      active={true}
+                      $active={true}
                       theme={theme}
                     >
                       <ColorIndicator color={PLAYER_COLORS[index + 1]} />
@@ -837,7 +837,7 @@ const WelcomePage = ({ onEnter, theme, setTheme }) => {
                   {playerCountOptions.map((count) => (
                     <OptionButton
                       key={count}
-                      active={selectedPlayerCount === count}
+                      $active={selectedPlayerCount === count}
                       onClick={() => setSelectedPlayerCount(count)}
                       theme={theme}
                     >
