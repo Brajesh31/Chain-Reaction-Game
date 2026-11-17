@@ -176,51 +176,6 @@ const GameBoard = styled.div`
     '15px 15px 30px #1c1f22, -15px -15px 30px #34393f'};
 `;
 
-const GameInfo = styled.div`
-  margin-bottom: 20px;
-  padding: 15px 30px;
-  background: ${props => props.theme === 'light' ? 
-    'rgba(255, 255, 255, 0.9)' : 
-    'rgba(44, 49, 56, 0.8)'};
-  border-radius: 10px;
-  box-shadow: ${props => props.theme === 'light' ?
-    '5px 5px 10px #bebebe, -5px -5px 10px #ffffff' :
-    '5px 5px 10px #1c1f22, -5px -5px 10px #34393f'};
-  text-align: center;
-`;
-
-const ThemeToggle = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  border: none;
-  cursor: pointer;
-  background: ${props => props.theme === 'light' ? 
-    'linear-gradient(145deg, #ffffff, #e0e0e0)' : 
-    'linear-gradient(145deg, #2c3138, #23272b)'};
-  box-shadow: ${props => props.theme === 'light' ?
-    '5px 5px 10px #bebebe, -5px -5px 10px #ffffff' :
-    '5px 5px 10px #1c1f22, -5px -5px 10px #34393f'};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 100;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  svg {
-    width: 24px;
-    height: 24px;
-    fill: ${props => props.theme === 'light' ? '#2c3138' : '#ffffff'};
-  }
-`;
-
 // Player colors
 const PLAYER_COLORS = {
   1: '#ff5252', // Red
@@ -251,7 +206,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   const [isMaximized, setIsMaximized] = useState(false);
 
   // Calculate the maximum capacity for a cell based on its position
-  const getMaxCapacity = (row, col) => {
+  const getMaxCapacity = useCallback((row, col) => {
     const isCorner =
       (row === 0 && col === 0) ||
       (row === 0 && col === gridSize.cols - 1) ||
@@ -264,115 +219,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
     if (isCorner) return 2;  // Corner cells: 2 adjacent cells
     if (isEdge) return 3;    // Edge cells: 3 adjacent cells
     return 4;                // Center cells: 4 adjacent cells
-  };
-
-  // Check if a cell is critical (one orb below critical mass)
-  const isCriticalCell = (cell, row, col) => {
-    const maxCapacity = getMaxCapacity(row, col);
-    return cell.count === maxCapacity - 1;
-  };
-
-  // Get contiguous blocks of critical cells
-  const getContiguousBlocks = (grid, player) => {
-    const visited = new Set();
-    const blocks = [];
-    
-    const dfs = (row, col, block) => {
-      const key = `${row},${col}`;
-      if (visited.has(key)) return;
-      
-      const cell = grid[row][col];
-      if (cell.owner !== player || !isCriticalCell(cell, row, col)) return;
-      
-      visited.add(key);
-      block.push([row, col]);
-      
-      // Check adjacent cells
-      const adjacent = getAdjacentCells(row, col);
-      for (const [adjRow, adjCol] of adjacent) {
-        dfs(adjRow, adjCol, block);
-      }
-    };
-    
-    for (let row = 0; row < gridSize.rows; row++) {
-      for (let col = 0; col < gridSize.cols; col++) {
-        if (!visited.has(`${row},${col}`)) {
-          const cell = grid[row][col];
-          if (cell.owner === player && isCriticalCell(cell, row, col)) {
-            const block = [];
-            dfs(row, col, block);
-            if (block.length > 0) blocks.push(block);
-          }
-        }
-      }
-    }
-    
-    return blocks;
-  };
-
-  // Evaluate board position using heuristics
-  const evaluateBoard = (grid, player) => {
-    let value = 0;
-    const opponent = player === 1 ? 2 : 1;
-    
-    // Check for win/loss
-    let playerOrbs = 0;
-    let opponentOrbs = 0;
-    
-    for (let row = 0; row < gridSize.rows; row++) {
-      for (let col = 0; col < gridSize.cols; col++) {
-        const cell = grid[row][col];
-        
-        if (cell.count > 0) {
-          if (cell.owner === player) {
-            playerOrbs++;
-            
-            // Add value for each orb
-            value += 1;
-            
-            // Check adjacent enemy critical cells
-            const adjacent = getAdjacentCells(row, col);
-            let hasEnemyCritical = false;
-            
-            for (const [adjRow, adjCol] of adjacent) {
-              const adjCell = grid[adjRow][adjCol];
-              if (adjCell.owner === opponent && isCriticalCell(adjCell, adjRow, adjCol)) {
-                hasEnemyCritical = true;
-                value -= 5 - getMaxCapacity(adjRow, adjCol);
-              }
-            }
-            
-            // Bonus for safe cells
-            if (!hasEnemyCritical) {
-              const isCorner = (row === 0 || row === gridSize.rows - 1) && 
-                             (col === 0 || col === gridSize.cols - 1);
-              const isEdge = row === 0 || row === gridSize.rows - 1 || 
-                            col === 0 || col === gridSize.cols - 1;
-              
-              if (isCorner) value += 3;
-              else if (isEdge) value += 2;
-              
-              if (isCriticalCell(cell, row, col)) value += 2;
-            }
-          } else if (cell.owner === opponent) {
-            opponentOrbs++;
-          }
-        }
-      }
-    }
-    
-    // Add value for contiguous blocks of critical cells
-    const blocks = getContiguousBlocks(grid, player);
-    for (const block of blocks) {
-      value += block.length * 2;
-    }
-    
-    // Check win/loss conditions
-    if (opponentOrbs === 0 && playerOrbs > 0) return 10000;
-    if (playerOrbs === 0 && opponentOrbs > 0) return -10000;
-    
-    return value;
-  };
+  }, [gridSize.rows, gridSize.cols]);
 
   // Memoize the grid capacity map
   const capacityMap = React.useMemo(() => {
@@ -383,7 +230,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
       }
     }
     return map;
-  }, [gridSize.rows, gridSize.cols]);
+  }, [gridSize.rows, gridSize.cols, getMaxCapacity]);
 
   // Progressive loading for large grids
   const initializeGridProgressively = useCallback(async (rows, cols) => {
@@ -455,6 +302,11 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
       col < gridSize.cols - 1 ? [row, col + 1] : null,
     ].filter(Boolean);
   }, [gridSize.rows, gridSize.cols]);
+
+  // Toggle between players
+  const togglePlayer = useCallback(() => {
+    setCurrentPlayer((player) => (player >= playerCount ? 1 : player + 1));
+  }, [playerCount]);
 
   // Performance monitoring
   useEffect(() => {
@@ -544,7 +396,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
     setGrid(newGrid);
     setIsAnimating(false);
     togglePlayer();
-  }, [currentPlayer, gridSize.rows, gridSize.cols, capacityMap, getAdjacentCells]);
+  }, [currentPlayer, gridSize.rows, gridSize.cols, capacityMap, getAdjacentCells, togglePlayer]);
 
   // Optimize cell click handler
   const handleCellClick = useCallback((row, col) => {
@@ -575,27 +427,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
       setGrid(newGrid);
       togglePlayer();
     }
-  }, [gameOver, isAnimating, grid, currentPlayer, capacityMap, processExplosions]);
-
-  // Toggle between players
-  const togglePlayer = () => {
-    let nextPlayer = currentPlayer + 1;
-    if (nextPlayer > playerCount) {
-      nextPlayer = 1;
-    }
-    setCurrentPlayer(nextPlayer);
-  };
-
-  // Change the grid size
-  const changeGridSize = (rows, cols) => {
-    setGridSize({ rows, cols });
-  };
-  
-  // Change the number of players
-  const changePlayerCount = (count) => {
-    setPlayerCount(count);
-    resetGame();
-  };
+  }, [gameOver, isAnimating, grid, currentPlayer, capacityMap, processExplosions, togglePlayer]);
 
   // Get player name by number
   const getPlayerName = (playerNumber) => {

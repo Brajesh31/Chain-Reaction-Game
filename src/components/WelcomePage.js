@@ -12,34 +12,6 @@ const pulse = keyframes`
   }
 `;
 
-const glow = keyframes`
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(97, 218, 251, 0.2),
-                0 0 10px rgba(97, 218, 251, 0.2),
-                0 0 15px rgba(97, 218, 251, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 10px rgba(97, 218, 251, 0.5),
-                0 0 20px rgba(97, 218, 251, 0.3),
-                0 0 30px rgba(97, 218, 251, 0.3);
-  }
-`;
-
-const explode = keyframes`
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(0.1);
-    opacity: 0;
-  }
-`;
-
 const ripple = keyframes`
   0% {
     transform: scale(0.8);
@@ -66,20 +38,6 @@ const shockwave = keyframes`
   }
   100% {
     transform: scale(2);
-    opacity: 0;
-  }
-`;
-
-const scatter = keyframes`
-  0% {
-    transform: translate(0, 0) scale(1);
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-  100% {
-    transform: translate(var(--tx), var(--ty)) scale(0);
     opacity: 0;
   }
 `;
@@ -251,18 +209,6 @@ const MainContent = styled.div`
   gap: 20px;
   width: 100%;
   align-items: center;
-`;
-
-const Description = styled.div`
-  background: rgba(44, 49, 56, 0.8);
-  padding: 20px;
-  border-radius: 15px;
-  margin: 0;
-  box-shadow: 
-    0 10px 20px rgba(0, 0, 0, 0.4),
-    inset 0 -5px 15px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  height: fit-content;
 `;
 
 const Subtitle = styled.h2`
@@ -771,7 +717,7 @@ const adjustColor = (color, amount) => {
     const r = clamp((num >> 16) + amount);
     const g = clamp(((num >> 8) & 0x00FF) + amount);
     const b = clamp((num & 0x0000FF) + amount);
-    return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
+    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
   }
   
   // Handle rgb/rgba colors

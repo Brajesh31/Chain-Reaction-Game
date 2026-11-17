@@ -1,21 +1,6 @@
 import React from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import styled from 'styled-components';
 import Cell from './Cell';
-
-const pulse = keyframes`
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-`;
 
 const BoardContainer = styled.div`
   display: grid;

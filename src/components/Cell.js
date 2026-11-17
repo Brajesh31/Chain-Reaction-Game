@@ -39,21 +39,6 @@ const float = keyframes`
   }
 `;
 
-const particleWave = keyframes`
-  0% {
-    transform: scale(1) rotate(0deg);
-    opacity: 0.3;
-  }
-  50% {
-    transform: scale(1.3) rotate(180deg);
-    opacity: 0.1;
-  }
-  100% {
-    transform: scale(1) rotate(360deg);
-    opacity: 0.3;
-  }
-`;
-
 const rotate = keyframes`
   from {
     transform: rotate(0deg);
@@ -427,44 +412,7 @@ const ParticleInner = styled.div`
   }
 `;
 
-const ParticlePattern = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  border-radius: 50%;
-  background: ${props => {
-    const overlays = [
-      'repeating-conic-gradient(from 0deg, transparent 0deg, transparent 30deg, rgba(255, 255, 255, 0.05) 30deg, rgba(255, 255, 255, 0.05) 60deg)',
-      'repeating-conic-gradient(from 45deg, transparent 0deg, transparent 45deg, rgba(255, 255, 255, 0.03) 45deg, rgba(255, 255, 255, 0.03) 90deg)',
-      'conic-gradient(from 0deg, transparent 0%, rgba(255, 255, 255, 0.05) 25%, transparent 50%, rgba(255, 255, 255, 0.05) 75%)',
-      'radial-gradient(circle at 70% 70%, transparent 50%, rgba(0, 0, 0, 0.1) 100%)',
-      'repeating-linear-gradient(30deg, transparent 0px, transparent 15px, rgba(255, 255, 255, 0.02) 15px, rgba(255, 255, 255, 0.02) 30px)',
-      'conic-gradient(from 90deg, rgba(255, 255, 255, 0.03) 0%, transparent 25%, rgba(255, 255, 255, 0.03) 50%, transparent 75%)',
-      'repeating-radial-gradient(circle at center, transparent 0px, transparent 10px, rgba(255, 255, 255, 0.02) 10px, rgba(255, 255, 255, 0.02) 20px)',
-      'linear-gradient(45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.03) 75%)',
-      'repeating-linear-gradient(60deg, transparent 0px, transparent 12px, rgba(255, 255, 255, 0.02) 12px, rgba(255, 255, 255, 0.02) 24px)',
-      'conic-gradient(from 120deg, rgba(255, 255, 255, 0.04) 0%, transparent 33%, rgba(255, 255, 255, 0.04) 66%)',
-      'repeating-radial-gradient(circle at 60% 40%, transparent 0px, transparent 8px, rgba(255, 255, 255, 0.03) 8px, rgba(255, 255, 255, 0.03) 16px)',
-      'linear-gradient(135deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.02) 75%)'
-    ];
-    return overlays[props.patternIndex % overlays.length];
-  }};
-  animation: ${rotate} ${props => 15 + props.patternIndex * 3}s linear infinite ${props => props.patternIndex % 2 === 0 ? '' : 'reverse'};
-`;
-
-const ParticleWave = styled.div`
-  width: 140%;
-  height: 140%;
-  position: absolute;
-  top: -20%;
-  left: -20%;
-  border-radius: 50%;
-  background: ${(props) => {
-    const color = getOrbColor(props);
-    return `radial-gradient(circle at center, ${color}22, transparent)`;
-  }};
+}};
   animation: ${particleWave} ${props => 3 + props.offset}s ease-in-out infinite;
 `;
 
@@ -507,29 +455,6 @@ const BlastParticle = styled.div`
   animation: ${props => keyframes`${props.animationCss}`} 0.7s ease-out;
   animation-play-state: ${props => props.isExploding ? 'running' : 'paused'};
 `;
-
-// Color adjustment utility function
-const adjustColor = (color, amount) => {
-  const clamp = (val) => Math.min(Math.max(val, 0), 255);
-  
-  // Handle hex colors
-  if (color.startsWith('#')) {
-    const hex = color.slice(1);
-    const num = parseInt(hex, 16);
-    const r = clamp((num >> 16) + amount);
-    const g = clamp(((num >> 8) & 0x00FF) + amount);
-    const b = clamp((num & 0x0000FF) + amount);
-    return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
-  }
-  
-  // Handle rgb/rgba colors
-  if (color.startsWith('rgb')) {
-    const [r, g, b, a] = color.match(/\d+/g).map(Number);
-    return `rgba(${clamp(r + amount)}, ${clamp(g + amount)}, ${clamp(b + amount)}, ${a || 1})`;
-  }
-  
-  return color;
-};
 
 const Cell = ({ row, col, cell, onClick, currentPlayer, isAnimating, playerColors }) => {
   const [isExploding, setIsExploding] = useState(false);
