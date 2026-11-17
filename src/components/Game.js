@@ -192,13 +192,13 @@ const getPlayerColor = (playerNumber) => {
 
 const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   // Default grid size
-  const [gridSize, setGridSize] = useState(initialGridSize || { rows: 6, cols: 6 });
+  const [gridSize] = useState(initialGridSize || { rows: 6, cols: 6 });
   const [grid, setGrid] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(1); // 1 for Player 1 (Red), 2 for Player 2 (Blue), etc.
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [playerCount, setPlayerCount] = useState(initialPlayerCount || 2); // Default to 2 players
+  const [playerCount] = useState(initialPlayerCount || 2); // Fixed for the duration of a match
   const [showPerformanceMonitor, setShowPerformanceMonitor] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const renderTimeRef = useRef(0);
