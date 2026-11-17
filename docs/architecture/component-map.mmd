@@ -1,0 +1,10 @@
+flowchart TD
+  Root[index.js] --> App[App.js]
+  App --> Welcome[WelcomePage]
+  App --> Intro[FloatingBubblesPage]
+  App --> Game[Game.js]
+  Game --> Controls[GameControls]
+  Game --> Monitor[PerformanceMonitor]
+  Game --> Board[Board.js]
+  Board --> Cell[Cell.js]
+  Cell --> Visual[Orb and explosion visuals]
