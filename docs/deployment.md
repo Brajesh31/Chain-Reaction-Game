@@ -1,29 +1,34 @@
-# Deployment
+# 🚀 Deployment
 
-## Current deployment shape
-
-The root `npm run build` command creates a static Create React App bundle under `build/`. The current game can be hosted by a static web host that serves those assets. There is no backend runtime, database, API, authentication service, or online multiplayer server to deploy.
+## Current model
+The app builds to static frontend assets. No server process or database is required for local play.
 
 ## Build
-
-From the repository root:
-
-```sh
+```bash
 npm ci
 npm run build
 ```
+Publish the contents of `build/` through a static hosting provider.
 
-Publish the contents of `build/` using the chosen host's documented static-site workflow. Configure a single-page application fallback to `index.html` if the host requires one. The game currently uses no client-side URL routes beyond its main page.
+## Host requirements
+- Serve `index.html` at the root.
+- Serve assets with correct MIME types.
+- Enable HTTPS.
+- Configure SPA fallback if client routes are introduced later.
+- Do not cache `index.html` indefinitely.
+- Never expose environment secrets in browser JavaScript.
 
-## Before publishing
+## Release checklist
+- [ ] Clean install from lockfile
+- [ ] Production build succeeds
+- [ ] Meaningful automated tests pass
+- [ ] Manually test 2/3/4 players
+- [ ] Test corner, edge and interior bursts
+- [ ] Test a multi-cell cascade
+- [ ] Test reset and theme controls
+- [ ] Check keyboard, reduced motion and narrow viewport
+- [ ] Check console/network errors
+- [ ] Verify HTTPS deployment
 
-- Confirm the build completes with the supported Node.js version selected for the project.
-- Check the game in target browsers and narrow viewports.
-- Replace or remove the stale starter test and add coverage for game rules.
-- Review the source and third-party asset/package licenses before redistribution.
-- Do not put private credentials in frontend environment variables or build output.
-- Confirm the host serves HTTPS and the static assets load correctly.
-
-## Future backend deployment
-
-The nested `server` package has dependencies but no application source, start script, health endpoint, or documented socket protocol. Do not deploy it as an online service until the server is implemented, its trust model is designed, and API/event behavior, validation, monitoring, and data handling are documented.
+## Future backend
+Do not deploy nested `server` package as an online service. It has no application entry point, start script, health endpoint, socket protocol or security design.
