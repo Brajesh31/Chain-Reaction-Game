@@ -1,92 +1,148 @@
-# Chain Reaction
+# 💥 Chain Reaction Game
 
-Chain Reaction is a browser-based, turn-by-turn grid strategy game built with React. Two to four players share one browser and take turns placing colored orbs. When a cell reaches its critical mass, it bursts into its orthogonal neighbors and can trigger a chain reaction.
+> A turn-based grid strategy game built with React. Place orbs, trigger cascading explosions, capture neighboring cells and outlast your opponents.
 
-The current application is local hot-seat play. It has no online multiplayer service, API, or database. Socket.IO appears in package manifests, but the checked-in application has no server implementation or client connection.
+<p align="center"><img src="public/logo.svg" alt="Chain Reaction Game logo" width="112"></p>
+<p align="center"><b>Local hot-seat strategy · 2–4 players · Responsive browser game</b></p>
 
-## Features
+<p align="center">
+<img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=111827">
+<img alt="CRA" src="https://img.shields.io/badge/Create%20React%20App-5.0.1-09D3AC">
+<img alt="Mode" src="https://img.shields.io/badge/Mode-Local%20Multiplayer-purple">
+<img alt="License" src="https://img.shields.io/badge/License-MIT-blue">
+</p>
 
-- Welcome screen with grid and player-count selection
-- Grid choices from 6×6 through 15×10 and two, three, or four local players
-- Turn validation and cell ownership
-- Corner, edge, and interior cell capacities
-- Cascading explosions that transfer neighboring cells to the active player
-- Dark and light themes, animated orbs, a board maximize control, and a performance overlay
-- Responsive layout for smaller screens
+## 🎮 Overview
+Chain Reaction is a shared-device strategy game. Two to four players take turns placing orbs on a rectangular board. Each cell has a critical mass determined by its orthogonal neighbors. When a cell reaches its threshold, it bursts and distributes orbs to adjacent cells. The active player's cascade can capture cells and trigger additional bursts.
 
-## Play
+**Current mode is local hot-seat play.** Players share one browser. State lives in React memory. There is no online matchmaking, account system, persistent match service, database, or working multiplayer server.
 
-1. Open the welcome screen and choose a grid size and number of players.
-2. Start the game. Players take turns using the same device.
-3. Select an empty cell or a cell already owned by the active player.
-4. Build a cell to its critical mass to burst it. Each orthogonal neighbor receives one orb owned by the player whose chain reaction is running.
-5. Continue until the game displays a winner. Use **Reset Game** to start over.
+## ✨ Current capabilities
 
-The default grid is 6×6 and the default player count is two. Game state is held in React component state and is lost when the page reloads.
+| Area | Current behavior |
+|---|---|
+| Setup | Choose 2, 3 or 4 local players |
+| Board | Choose among dimensions exposed by the welcome screen |
+| Turns | One active player at a time |
+| Legal moves | Empty cells or cells owned by the active player |
+| Critical mass | Corner 2, edge 3, interior 4 |
+| Chain reactions | Bursts distribute one orb to each orthogonal neighbor |
+| Capture | Affected neighbors become owned by the initiating player |
+| Presentation | Animated orbs, title screen, theme controls and responsive layout |
+| Diagnostics | Optional performance overlay |
 
-## Requirements
+> ⚠️ The welcome-screen preview currently shows thresholds 1/2/3, while the engine uses 2/3/4. Treat engine behavior as authoritative until the preview is corrected.
 
-- Node.js and npm
-- A modern browser with JavaScript enabled
+## 🧠 Turn lifecycle
 
-There are no required credentials, external services, or database configuration for the current frontend.
+```mermaid
+flowchart TD
+ A([Player selects cell]) --> B{Empty or owned by active player?}
+ B -- No --> C[Reject move without mutation]
+ C --> A
+ B -- Yes --> D[Add one orb and assign ownership]
+ D --> E{Critical mass reached?}
+ E -- No --> F[Finish move]
+ E -- Yes --> G[Queue unstable cell]
+ G --> H[Burst and distribute to orthogonal neighbors]
+ H --> I[Transfer neighbor ownership]
+ I --> J{More unstable cells?}
+ J -- Yes --> G
+ J -- No --> F
+ F --> K[Evaluate result and advance turn]
+```
 
-## Run locally
+See [game rules](docs/game-rules.md) and [engine design](docs/engineering/game-engine.md).
 
-From the repository root:
+## 🚀 Run locally
 
-```sh
-npm install
+Requirements: Node.js compatible with the Create React App 5 toolchain, npm, and a modern browser.
+
+```bash
+git clone https://github.com/Brajesh31/Chain-Reaction-Game.git
+cd Chain-Reaction-Game
+npm ci
 npm start
 ```
 
-Create React App starts its development server and opens the game, usually at `http://localhost:3000`.
-
-## Available scripts
+Open http://localhost:3000.
 
 | Command | Purpose |
-| --- | --- |
-| `npm start` | Start the Create React App development server |
-| `npm run build` | Create a static production build in `build/` |
-| `npm test` | Start the Create React App/Jest test runner |
-| `npm run eject` | Copy Create React App configuration into the project; this is a one-way operation |
+|---|---|
+| `npm start` | Start development server |
+| `npm run build` | Build static assets into `build/` |
+| `npm test` | Run CRA/Jest test runner |
+| `npm run eject` | Eject CRA configuration, irreversible |
 
-The current `src/App.test.js` is the original Create React App sample and looks for the removed “learn react” text. Replace it with game behavior tests before treating the test suite as meaningful. The nested `server` package has no application entry point; its only test script exits with an “no test specified” message. No tests are claimed as run for this documentation change.
+⚠️ `src/App.test.js` is still the default CRA sample test and expects the removed “learn react” link. Replace it with game-specific tests before treating the suite as meaningful. No test or build result is claimed by this documentation change.
 
-## Repository layout
+## 🗂️ Repository layout
 
 ```text
+.github/                  GitHub workflows and templates
+docs/                     Product, rules, architecture, quality, security
+  architecture/           Editable Mermaid diagrams
+  engineering/            Engine and development standards
+  product/                Requirements, user stories and journeys
+  quality/                Tests, QA and definition of done
+  security/               Threat model and safe development
+  operations/              Runbooks and release guidance
+  templates/               Reusable project templates
+public/                   Static assets
+server/                   Package manifests only, no server source
 src/
-  App.js                  Screen flow and application theme
+  App.js                  Screen flow and theme
   components/
-    Game.js               Board state, turns, capacities, and chain reactions
-    Board.js              Grid layout
-    Cell.js               Cell rendering and explosion effects
-    WelcomePage.js        Game settings and rules
-    FloatingBubblesPage.js Animated title screen
-    GameControls.js       Reset, theme, and monitor controls
-    PerformanceMonitor.js Browser performance display
-public/                   HTML shell and static icons
-server/                   Package manifests only; no server source is present
+    Game.js               Board state, turns and cascades
+    Board.js              Grid composition
+    Cell.js               Cell and orb presentation
+    WelcomePage.js        Setup and rules preview
+    ...                   Controls, title and performance display
 ```
 
-More detail is in [docs/architecture.md](docs/architecture.md), [docs/development.md](docs/development.md), and [docs/troubleshooting.md](docs/troubleshooting.md).
+The repository currently tracks files under `server/node_modules`. Do not add more dependency artifacts. See [repository hygiene](docs/engineering/repository-hygiene.md).
 
-## Current limitations
+## 📚 Documentation
+- [Documentation index](docs/README.md)
+- [Rules and gameplay](docs/game-rules.md)
+- [Architecture](docs/architecture.md)
+- [Engine design](docs/engineering/game-engine.md)
+- [State model](docs/engineering/state-model.md)
+- [Development](docs/development.md)
+- [Testing strategy](docs/quality/testing-strategy.md)
+- [Test cases](docs/quality/test-cases.md)
+- [Accessibility](docs/design/accessibility.md)
+- [Deployment](docs/deployment.md)
+- [Threat model](docs/security/threat-model.md)
+- [Operations runbook](docs/operations/runbook.md)
+- [Templates](docs/templates/README.md)
+- [Roadmap](ROADMAP.md)
 
-- Play is local only. The Socket.IO and Express dependencies do not provide an online game by themselves.
-- The game has no accounts, match persistence, database, or HTTP API.
-- The welcome-screen cell-capacity preview uses values one below the actual game thresholds; the game logic uses neighbor counts (2 for corners, 3 for edges, 4 for interior cells).
-- The win check and chain-reaction queue need focused tests, especially for initial player turns and repeated cascades.
-- The checked-in CRA test still describes the default starter application.
-- `server/node_modules` is tracked in the current repository history. Avoid committing additional dependency installation output; see [docs/development.md](docs/development.md).
+## 🧰 Technology
+React 19, React DOM, Create React App / react-scripts 5, Framer Motion, Styled Components, React Toastify, Jest and React Testing Library dependencies.
 
-## Contributing, support, and security
+Express and Socket.IO appear in package manifests, but there is no checked-in server implementation or socket client connection. Packages alone do not implement online multiplayer.
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before sending a pull request. Use [SUPPORT.md](SUPPORT.md) for questions and [SECURITY.md](SECURITY.md) for private vulnerability reports. The [ROADMAP.md](ROADMAP.md) records possible follow-up work without promising delivery dates.
+## 🧪 Known gaps
+- [ ] Replace stale CRA sample test with real game tests.
+- [ ] Add deterministic critical-mass and cascade tests.
+- [ ] Verify elimination and winner detection for 2–4 players.
+- [ ] Correct welcome-screen critical-mass preview.
+- [ ] Validate accessible keyboard interaction and live status announcements.
+- [ ] Decide whether unused server package/dependencies should be removed or implemented.
+- [ ] Remove tracked `server/node_modules` artifacts in a reviewed cleanup.
+- [ ] Verify dependency compatibility and production build on supported Node.
 
-## License
+## 🤝 Contributing
+Read [CONTRIBUTING.md](CONTRIBUTING.md), follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), and use the issue/PR templates. Rule changes must include tests and documentation updates.
 
-The MIT grant in [LICENSE](LICENSE) applies to the repository handbook and guidance authored by Brajesh Kumar (`@brajesh31`) in this contribution. It does not claim rights to pre-existing game code, assets, or third-party packages whose provenance is not established by the repository metadata.
+## 🔐 Security
+The game is browser-only and local. Never place secrets in frontend source or `REACT_APP_*` variables. See [SECURITY.md](SECURITY.md).
 
-Last updated: 2026-11-17 03:33 UTC
+## 🗺️ Future direction
+Potential ideas include a pure tested engine, undo/replay, AI opponents, online rooms, an authoritative server and persistent match records. These are proposals, not current features. See [ROADMAP.md](ROADMAP.md).
+
+## 📄 License
+See [LICENSE](LICENSE) for repository license terms. Review third-party package and asset notices separately.
+
+<p align="center">💥 Make a move. Trigger a chain. Own the board.</p>
