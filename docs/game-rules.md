@@ -17,7 +17,7 @@ A cell has an owner identifier and a non-negative orb count. Owner zero represen
 | Non-corner edge | 3 | 3 |
 | Interior | 4 | 4 |
 
-The engine's threshold is the number of in-bounds orthogonal neighbors. The welcome screen preview currently displays 1/2/3, which is a known mismatch. The engine values above are authoritative.
+The engine and setup preview share the same pure critical-mass helper. Both use the number of in-bounds orthogonal neighbors, so the displayed thresholds match live play.
 
 ## Legal move
 A move is legal when the target is empty or owned by the active player. A move on an opponent-owned cell must be rejected without changing board state or advancing the turn.
@@ -32,7 +32,7 @@ A move is legal when the target is empty or owned by the active player. A move o
 7. The turn advances after the entire cascade settles.
 
 ## Victory and reset
-The app displays a winner when its winner check detects a winner. Exact edge cases around early elimination and all player counts need focused tests. Reset starts a fresh local game using the setup configuration.
+A player becomes eligible for elimination only after making at least one successful move. The game cannot declare a winner until every configured player has entered the match. After that opening phase, a winner is declared when only one player still owns cells. Reset starts a fresh local game using the setup configuration.
 
 ## Session behavior
 State is held in React memory. Reloading loses the current match. There are no saved games, player accounts, match history or networked rooms.
@@ -45,4 +45,5 @@ State is held in React memory. Reloading loses the current match. There are no s
 - [ ] Ownership changes to the initiating player.
 - [ ] Cascades finish deterministically.
 - [ ] The turn advances once after resolution.
+- [ ] No winner is declared before every configured player has made a successful move.
 - [ ] Winner handling works for 2, 3 and 4 players.

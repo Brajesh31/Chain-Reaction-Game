@@ -137,6 +137,9 @@ Deploy the contents of build/ to a static host. Configure an SPA fallback to ind
         ├── Cell.js           # Cell and orb presentation
         ├── WelcomePage.js    # Match setup and rules preview
         └── ...               # Controls, title and diagnostics
+    └── game/
+        ├── rules.js          # Shared pure board-rule helpers
+        └── rules.test.js     # Deterministic rule tests
 ~~~~
 
 Generated dependencies are not source files. The committed server/node_modules tree has been removed; install packages from lockfiles when needed. The server directory still has manifests only and is not a working backend.
@@ -148,10 +151,10 @@ Start at the [documentation index](docs/README.md).
 | Area | Documentation |
 |---|---|
 | Product | [Brief](docs/product/project-brief.md) · [Requirements](docs/product/requirements.md) · [Feature inventory](docs/product/feature-inventory.md) · [User stories](docs/product/user-stories.md) · [Use cases](docs/product/use-cases.md) · [Player journeys](docs/product/player-journeys.md) |
-| Gameplay | [Rules](docs/game-rules.md) · [Strategy guide](docs/product/strategy-guide.md) · [Balance notes](docs/product/gameplay-balance.md) |
+| Gameplay | [Rules](docs/game-rules.md) · [Shared rules module](docs/engineering/game-rules-module.md) · [Strategy guide](docs/product/strategy-guide.md) · [Balance notes](docs/product/gameplay-balance.md) |
 | Architecture | [System architecture](docs/architecture.md) · [Game engine](docs/engineering/game-engine.md) · [State model](docs/engineering/state-model.md) · [Cascade algorithm](docs/architecture/cascade-resolution.md) · [Complexity](docs/architecture/algorithm-complexity.md) |
 | Engineering | [Development standards](docs/engineering/development-standards.md) · [Browser support](docs/engineering/browser-compatibility.md) · [Dependencies](docs/engineering/dependency-management.md) · [Repository hygiene](docs/engineering/repository-hygiene.md) |
-| Quality | [Testing strategy](docs/quality/testing-strategy.md) · [Test cases](docs/quality/test-cases.md) · [QA checklist](docs/quality/qa-checklist.md) · [Regression matrix](docs/quality/regression-matrix.md) · [Playtest script](docs/quality/manual-playtest-script.md) · [Accessibility audit](docs/quality/accessibility-audit.md) |
+| Quality | [Testing strategy](docs/quality/testing-strategy.md) · [Engine test coverage](docs/quality/engine-test-coverage.md) · [Test cases](docs/quality/test-cases.md) · [QA checklist](docs/quality/qa-checklist.md) · [Regression matrix](docs/quality/regression-matrix.md) · [Playtest script](docs/quality/manual-playtest-script.md) · [Accessibility audit](docs/quality/accessibility-audit.md) |
 | Design | [Design system](docs/design/design-system.md) · [Responsive guidance](docs/design/responsive-guidelines.md) · [Accessibility](docs/design/accessibility.md) · [Motion](docs/design/motion-guidelines.md) |
 | Security | [Threat model](docs/security/threat-model.md) · [Data handling](docs/security/data-handling.md) · [Frontend security](docs/security/frontend-security.md) · [Dependency security](docs/security/dependency-security.md) |
 | Operations | [Runbook](docs/operations/runbook.md) · [Hosting](docs/operations/deployment-hosting.md) · [Environment](docs/operations/environment-configuration.md) · [Monitoring](docs/operations/monitoring.md) · [Backup/recovery](docs/operations/backup-recovery.md) · [Release/rollback](docs/operations/release-rollback.md) |
@@ -174,7 +177,7 @@ python scripts/validate_docs.py
 python scripts/validate_repository.py
 ~~~~
 
-A passing smoke test is not equivalent to full gameplay verification. Deterministic cascade, elimination and endgame coverage remain explicit quality priorities. See [technical debt](docs/engineering/technical-debt.md).
+The shared board-rule helpers have deterministic unit tests for neighbor geometry, critical mass, move ownership and the opening participation guard. Full multi-wave cascade and endgame integration fixtures remain quality priorities. See [engine test coverage](docs/quality/engine-test-coverage.md) and [technical debt](docs/engineering/technical-debt.md).
 
 ## 🤝 Contributing
 Read [CONTRIBUTING.md](CONTRIBUTING.md), follow the [Code of Conduct](CODE_OF_CONDUCT.md), use the issue and PR templates, and update tests and documentation alongside behavior changes.

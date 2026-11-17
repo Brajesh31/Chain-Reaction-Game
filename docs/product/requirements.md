@@ -9,7 +9,7 @@
 | FR-04 | Compute critical mass | Corner/edge/interior thresholds are 2/3/4 | Implemented |
 | FR-05 | Resolve all bursts | Cascades settle before next turn | Present, automated coverage missing |
 | FR-06 | Transfer ownership | Affected neighbors belong to initiator | Present |
-| FR-07 | Detect elimination and winner | Terminal state prevents further input | Requires dedicated verification |
+| FR-07 | Detect elimination and winner | No winner before every configured player has moved; terminal state blocks input | Participation guard implemented; full endgame fixtures still required |
 | FR-08 | Restart cleanly | Fresh board and initial turn restored | Verify controls |
 | FR-09 | Change theme | Theme changes without losing match | Implemented |
 | FR-10 | Operate on small screens | Board remains operable | Partial, test matrix needed |
