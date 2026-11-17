@@ -42,3 +42,35 @@ export function isLegalMove(cell, activePlayer) {
 
   return cell.owner === 0 || cell.owner === activePlayer;
 }
+
+/**
+ * Determine the winner only after every configured player has entered the
+ * match. This avoids declaring a winner during the opening turns.
+ */
+export function getWinner(grid, playerCount, playersWhoHaveMoved) {
+  if (!Array.isArray(grid) || !Number.isInteger(playerCount) || playerCount < 2) {
+    return null;
+  }
+
+  const participatingPlayers = new Set(
+    (playersWhoHaveMoved || []).filter(
+      (player) => Number.isInteger(player) && player >= 1 && player <= playerCount
+    )
+  );
+
+  if (participatingPlayers.size < playerCount) {
+    return null;
+  }
+
+  const activePlayers = new Set();
+  grid.forEach((row) => {
+    if (!Array.isArray(row)) return;
+    row.forEach((cell) => {
+      if (cell && cell.count > 0 && cell.owner >= 1 && cell.owner <= playerCount) {
+        activePlayers.add(cell.owner);
+      }
+    });
+  });
+
+  return activePlayers.size === 1 ? Array.from(activePlayers)[0] : null;
+}

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Board from './Board';
 import GameControls from './GameControls';
 import PerformanceMonitor from './PerformanceMonitor';
-import { getCriticalMass, getOrthogonalNeighbors, isLegalMove } from '../game/rules';
+import { getCriticalMass, getOrthogonalNeighbors, isLegalMove, getWinner } from '../game/rules';
 
 const GameContainer = styled.div`
   display: flex;
@@ -199,6 +199,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   const [winner, setWinner] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [playerCount] = useState(initialPlayerCount || 2); // Fixed for the duration of a match
+  const [playersWhoHaveMoved, setPlayersWhoHaveMoved] = useState([]);
   const [showPerformanceMonitor, setShowPerformanceMonitor] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const renderTimeRef = useRef(0);
@@ -276,6 +277,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
     setCurrentPlayer(1);
     setGameOver(false);
     setWinner(null);
+    setPlayersWhoHaveMoved([]);
     setIsAnimating(false);
   }, [gridSize, initializeGridProgressively]);
 
@@ -310,7 +312,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   }, []);
 
   // Update processExplosions to track performance
-  const processExplosions = useCallback((currentGrid, startRow, startCol) => {
+  const processExplosions = useCallback((currentGrid, startRow, startCol, participatingPlayers) => {
     const startTime = performance.now();
     
     const newGrid = JSON.parse(JSON.stringify(currentGrid));
@@ -362,26 +364,17 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
       newGrid[row][col] = value;
     });
     
-    // Check win condition
-    const activePlayers = new Set();
-    for (let row = 0; row < gridSize.rows; row++) {
-      for (let col = 0; col < gridSize.cols; col++) {
-        const cell = newGrid[row][col];
-        if (cell.count > 0) {
-          activePlayers.add(cell.owner);
-        }
-      }
-    }
-    
-    if (activePlayers.size === 1 && activePlayers.has(currentPlayer)) {
+    // A winner can be declared only after every configured player has moved.
+    const resolvedWinner = getWinner(newGrid, playerCount, participatingPlayers);
+    if (resolvedWinner !== null) {
       setGameOver(true);
-      setWinner(currentPlayer);
+      setWinner(resolvedWinner);
     }
     
     setGrid(newGrid);
     setIsAnimating(false);
     togglePlayer();
-  }, [currentPlayer, gridSize.rows, gridSize.cols, capacityMap, getAdjacentCells, togglePlayer]);
+  }, [currentPlayer, gridSize.rows, gridSize.cols, capacityMap, getAdjacentCells, togglePlayer, playerCount]);
 
   // Optimize cell click handler
   const handleCellClick = useCallback((row, col) => {
@@ -393,6 +386,12 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
     // Check if the move is valid
     if (!isLegalMove(cell, currentPlayer)) return;
     if (cell.count + 1 > maxCapacity) return;
+
+    // Remember each player's first successful move for correct endgame checks.
+    const participatingPlayers = playersWhoHaveMoved.includes(currentPlayer)
+      ? playersWhoHaveMoved
+      : [...playersWhoHaveMoved, currentPlayer];
+    setPlayersWhoHaveMoved(participatingPlayers);
 
     // Update the grid with the new orb
     const newGrid = grid.map(row => [...row]);
@@ -406,13 +405,13 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
       setIsAnimating(true);
       setGrid(newGrid);
       setTimeout(() => {
-        processExplosions(newGrid, row, col);
+        processExplosions(newGrid, row, col, participatingPlayers);
       }, 300);
     } else {
       setGrid(newGrid);
       togglePlayer();
     }
-  }, [gameOver, isAnimating, grid, currentPlayer, capacityMap, processExplosions, togglePlayer]);
+  }, [gameOver, isAnimating, grid, currentPlayer, capacityMap, processExplosions, togglePlayer, playersWhoHaveMoved]);
 
   // Get player name by number
   const getPlayerName = (playerNumber) => {

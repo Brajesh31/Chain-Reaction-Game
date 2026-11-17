@@ -2,6 +2,7 @@ import {
   getCriticalMass,
   getOrthogonalNeighbors,
   isLegalMove,
+  getWinner,
 } from './rules';
 
 describe('getOrthogonalNeighbors', () => {
@@ -65,5 +66,33 @@ describe('isLegalMove', () => {
     expect(isLegalMove({ owner: 1 }, 2)).toBe(false);
     expect(isLegalMove(null, 2)).toBe(false);
     expect(isLegalMove({ owner: 0 }, 0)).toBe(false);
+  });
+});
+
+describe('getWinner', () => {
+  const boardWithPlayerTwoOnly = [
+    [{ owner: 2, count: 1 }, { owner: 0, count: 0 }],
+    [{ owner: 0, count: 0 }, { owner: 0, count: 0 }],
+  ];
+
+  test('does not end the match before every configured player has moved', () => {
+    expect(getWinner(boardWithPlayerTwoOnly, 2, [2])).toBeNull();
+    expect(getWinner(boardWithPlayerTwoOnly, 4, [1, 2, 3])).toBeNull();
+  });
+
+  test('returns the only remaining owner after all players have participated', () => {
+    expect(getWinner(boardWithPlayerTwoOnly, 2, [1, 2])).toBe(2);
+    expect(getWinner(boardWithPlayerTwoOnly, 4, [1, 2, 3, 4])).toBe(2);
+  });
+
+  test('returns null while multiple players still own cells', () => {
+    const mixedBoard = [
+      [{ owner: 1, count: 1 }, { owner: 2, count: 1 }],
+    ];
+    expect(getWinner(mixedBoard, 2, [1, 2])).toBeNull();
+  });
+
+  test('returns null for an empty board', () => {
+    expect(getWinner([[{ owner: 0, count: 0 }]], 2, [1, 2])).toBeNull();
   });
 });
