@@ -1,0 +1,24 @@
+name: "⚡ Performance issue"
+description: Report a slow render, delayed cascade or browser freeze.
+title: "[Performance]: "
+labels: ["performance"]
+body:
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps and board fixture
+      description: Include grid size, move sequence and player count.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser, OS and device
+    validations:
+      required: true
+  - type: textarea
+    id: profile
+    attributes:
+      label: Timing, profiler capture or console evidence
+    validations:
+      required: false

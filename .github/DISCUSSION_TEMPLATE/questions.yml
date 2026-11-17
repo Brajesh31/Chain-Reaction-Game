@@ -1,0 +1,14 @@
+title: "❓ Question: "
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: What are you trying to understand?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: What have you already tried?
+    validations:
+      required: false

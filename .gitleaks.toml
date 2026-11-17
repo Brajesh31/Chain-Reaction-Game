@@ -1,0 +1,6 @@
+title = "Chain Reaction Game secret scanning"
+
+[extend]
+useDefault = true
+
+# Avoid broad allowlists. Scope any future false-positive exception to one exact path.

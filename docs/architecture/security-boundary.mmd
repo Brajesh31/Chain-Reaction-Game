@@ -1,0 +1,15 @@
+flowchart LR
+  subgraph Browser[User-controlled browser]
+    UI[React interface]
+    State[In-memory match state]
+    Rules[Client-side rules]
+  end
+  Packages[External npm packages] --> Build[CI build supply chain]
+  Repo[Git repository] --> Actions[GitHub Actions]
+  Actions --> Build
+  Build --> UI
+  UI <--> State
+  UI --> Rules
+  Rules --> State
+  Future[Proposed authoritative server] -. not implemented .-> Browser
+  Note[No API, identity or database today] --- Browser

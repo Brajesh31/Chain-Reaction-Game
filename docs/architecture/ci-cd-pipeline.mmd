@@ -1,0 +1,13 @@
+flowchart TD
+  A[Push or pull request] --> B[npm ci]
+  B --> C[Jest tests]
+  C --> D[Production build]
+  D --> E[Markdown and repository checks]
+  E --> F[Project tree and SVG checks]
+  F --> G[CodeQL and secret scan]
+  G --> H[Dependency review and audit report]
+  H --> I{Required checks pass?}
+  I -->|No| J[Fix or investigate]
+  I -->|Yes| K[Review and merge]
+  K --> L[Tag release when approved]
+  L --> M[Build release artifact]

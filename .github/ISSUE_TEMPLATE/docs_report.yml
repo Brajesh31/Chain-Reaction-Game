@@ -1,0 +1,25 @@
+name: "📚 Documentation issue"
+description: Report missing, inaccurate or broken project documentation.
+title: "[Docs]: "
+labels: ["documentation"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Affected page or path
+      placeholder: docs/...
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is incorrect or missing?
+      description: Quote the relevant section and explain the expected correction.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or suggested change
+    validations:
+      required: false

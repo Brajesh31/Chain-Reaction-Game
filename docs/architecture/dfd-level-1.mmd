@@ -1,0 +1,14 @@
+flowchart TD
+  A[Player action] --> B[Cell button]
+  B --> C[Board callback]
+  C --> D[Game handler]
+  D --> E{Input allowed?}
+  E -->|No| F[Feedback or ignore]
+  E -->|Yes| G[resolveMove]
+  G --> H{Rules result ok?}
+  H -->|No| I[Show rejection]
+  H -->|Yes| J[Preview cascade if needed]
+  J --> K[Lock input]
+  K --> L[Commit settled board]
+  L --> M[Check winner and next player]
+  M --> N[Render updated state]

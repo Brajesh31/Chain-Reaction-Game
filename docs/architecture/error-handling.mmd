@@ -1,0 +1,14 @@
+flowchart TD
+  A[Move action] --> B[Validate board and coordinate]
+  B --> C{Valid input?}
+  C -->|No| D[Return failure reason]
+  C -->|Yes| E[Validate player and ownership]
+  E --> F{Legal?}
+  F -->|No| D
+  F -->|Yes| G[Resolve bounded cascade]
+  G --> H{Burst limit exceeded?}
+  H -->|Yes| I[Return original board unchanged]
+  H -->|No| J[Return settled result]
+  D --> K[UI feedback]
+  I --> K
+  J --> L[Commit after presentation]

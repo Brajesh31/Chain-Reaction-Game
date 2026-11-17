@@ -1,0 +1,7 @@
+flowchart LR
+  Player[Local players] -->|Cell selection| Game[Browser game]
+  Game -->|Read/write| State[In-memory board and turn state]
+  Game -->|Move input| Rules[Pure rules module]
+  Rules -->|Resolved board or rejection| Game
+  Game -->|Rendered cells and status| Player
+  Note[No API or database] --- State

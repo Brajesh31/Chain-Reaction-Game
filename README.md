@@ -3,47 +3,51 @@
 > A turn-based grid strategy game built with React. Place orbs, trigger cascading explosions, capture neighboring cells and outlast your opponents.
 
 <p align="center">
-  <img src="public/logo.svg" alt="Chain Reaction Game logo" width="112">
+  <img src="docs/assets/project-banner.svg" alt="Chain Reaction Game banner with glowing grid and red and cyan orbs" width="100%">
 </p>
 <p align="center"><strong>Local hot-seat strategy · 2–4 players · Responsive browser game</strong></p>
 
 <p align="center">
   <img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=111827">
   <img alt="Create React App 5" src="https://img.shields.io/badge/Create%20React%20App-5.0.1-09D3AC">
-  <img alt="Gameplay" src="https://img.shields.io/badge/Gameplay-Local%20Multiplayer-purple">
+  <img alt="Gameplay" src="https://img.shields.io/badge/Gameplay-Local%20Hot--Seat-purple">
+  <img alt="Package version" src="https://img.shields.io/badge/package-0.1.0-informational">
   <img alt="Documentation license" src="https://img.shields.io/badge/Docs%20License-MIT-blue">
+  <img alt="Stars" src="https://img.shields.io/github/stars/Brajesh31/Chain-Reaction-Game?style=flat">
+  <img alt="Forks" src="https://img.shields.io/github/forks/Brajesh31/Chain-Reaction-Game?style=flat">
   <img alt="CI" src="https://github.com/Brajesh31/Chain-Reaction-Game/actions/workflows/ci.yml/badge.svg">
   <img alt="Docs validation" src="https://github.com/Brajesh31/Chain-Reaction-Game/actions/workflows/docs-validation.yml/badge.svg">
+  <img alt="CodeQL" src="https://github.com/Brajesh31/Chain-Reaction-Game/actions/workflows/codeql.yml/badge.svg">
+  <img alt="Secret scanning" src="https://github.com/Brajesh31/Chain-Reaction-Game/actions/workflows/secret-scan.yml/badge.svg">
+  <img alt="Dependency audit report" src="https://github.com/Brajesh31/Chain-Reaction-Game/actions/workflows/dependency-audit.yml/badge.svg">
 </p>
 
 ## 📸 Game concept
 
-<p align="center">
-  <img src="docs/assets/game-board.svg" alt="Illustrated Chain Reaction board with red and blue orbs" width="760">
-</p>
+<p align="center"><img src="docs/assets/game-board.svg" alt="Illustrated Chain Reaction board with red and blue orbs" width="760"></p>
 
-> This board image is a project illustration, not a captured runtime screenshot. See [visual assets](docs/assets/README.md).
+> The board is an illustration, not a captured runtime screenshot. No verified runtime screenshot set is checked in. See [visual assets](docs/assets/README.md) and the [screenshot guide](docs/screenshots/README.md).
 
 ## 🎮 Overview
 
-Chain Reaction is a shared-device strategy game. Two to four players take turns placing orbs on a rectangular board. Every cell has a critical mass equal to its number of in-bounds orthogonal neighbors. When a cell reaches that threshold, it bursts and distributes one orb to each orthogonal neighbor. Captured cells change to the initiating player's color, which can create further bursts.
+Chain Reaction is a shared-device strategy game. Two to four players take turns placing orbs on a rectangular board. Every cell has a critical mass equal to its number of in-bounds orthogonal neighbors. When a cell reaches that threshold, it bursts and distributes one orb to each orthogonal neighbor. Captured cells change to the initiating player's ownership, which can create further bursts.
 
-**Current mode is local hot-seat play.** Players share one browser. Match state is held in React memory. There is no online matchmaking, account system, persistent match service, database or working multiplayer server.
+**Current mode is local hot-seat play.** Players share one browser. Match state is held in React memory. There is no online matchmaking, account system, persistent match service, database, API or backend service.
 
 ## ✨ Current capabilities
 
 | Area | Current behavior | Status |
 |---|---|---|
 | Setup | Choose 2, 3 or 4 local players | Implemented |
-| Board | Choose among six grid dimensions | Implemented |
+| Board | Choose among six grid dimensions | Implemented in setup |
 | Turns | One active player at a time | Implemented |
 | Legal moves | Empty cells or cells owned by active player | Implemented |
-| Critical mass | Corner 2, edge 3, interior 4 | Engine rule |
-| Chain reactions | Burst distributes one orb to orthogonal neighbors | Implemented |
+| Critical mass | Corner 2, edge 3, interior 4 | Engine rule and unit-tested |
+| Chain reactions | Pure queued cascade resolution | Implemented and deterministic tests |
 | Capture | Affected neighbors become owned by initiating player | Implemented |
 | Presentation | Animated orbs, title screen and theme controls | Implemented |
 | Diagnostics | Optional browser performance overlay | Implemented |
-| Keyboard play | One-tab-stop grid with arrow/Home/End navigation | Implemented |
+| Keyboard play | Semantic grid with arrow/Home/End navigation | Implemented and component-tested |
 | Reduced motion | Honors operating-system reduced-motion preference | Implemented |
 | Online play | Rooms, remote players and authoritative server | Not implemented |
 | Persistence | Accounts, database and saved matches | Not implemented |
@@ -59,7 +63,7 @@ Chain Reaction is a shared-device strategy game. Two to four players take turns 
 7. A bounded burst limit rejects pathological cycles without applying partial board state.
 8. A player is not eligible for elimination until taking an opening turn; eliminated players are skipped thereafter.
 
-~~~~mermaid
+~~~mermaid
 flowchart TD
  A([Player selects cell]) --> B{Empty or owned by active player?}
  B -- No --> C[Reject move without mutation]
@@ -76,9 +80,9 @@ flowchart TD
  F --> K{Match finished?}
  K -- Yes --> L[Show winner]
  K -- No --> M[Advance turn]
-~~~~
+~~~
 
-See [game rules](docs/game-rules.md), [cascade algorithm](docs/architecture/cascade-resolution.md) and [editable diagrams](docs/architecture/README.md).
+See [game rules](docs/game-rules.md), [cascade algorithm](docs/architecture/cascade-resolution.md), [application lifecycle](docs/application-lifecycle.md) and [editable diagrams](docs/architecture/README.md).
 
 ## 🚀 Run locally
 
@@ -88,117 +92,98 @@ See [game rules](docs/game-rules.md), [cascade algorithm](docs/architecture/casc
 - A modern desktop or mobile browser.
 
 ### Install and start
-
-~~~~bash
+~~~bash
 git clone https://github.com/Brajesh31/Chain-Reaction-Game.git
 cd Chain-Reaction-Game
 npm ci
 npm start
-~~~~
-
+~~~
 Open http://localhost:3000.
 
-### Available commands
-
+### Commands
 | Command | Purpose |
 |---|---|
-| npm start | Start the development server |
-| npm test -- --watchAll=false | Run tests once |
-| npm run build | Create the production bundle in build/ |
+| npm start | Start development server |
+| npm test -- --watchAll=false --runInBand | Run tests once |
+| npm run build | Create production bundle in build/ |
 | npm run eject | Eject CRA configuration, irreversible |
 
-### Production hosting
-Deploy the contents of build/ to a static host. Configure an SPA fallback to index.html for direct navigation and refresh. See [deployment guide](docs/operations/deployment-hosting.md).
+Deploy build/ to a static host. Configure HTTPS and cache behavior. See [deployment](docs/deployment.md), [production setup](docs/production-setup.md) and [hosting](docs/hosting.md).
 
 ## 🗂️ Repository structure
 
-~~~~text
+The complete tree is generated from Git and checked in CI. See [project structure](docs/project-structure.md) for the full tree and explanations of major directories and entry points.
+
+~~~text
 .
-├── .github/
-│   ├── ISSUE_TEMPLATE/       # Structured issue forms
-│   ├── workflows/            # CI, docs validation and automation
-│   └── PULL_REQUEST_TEMPLATE.md
-├── docs/
-│   ├── architecture/         # Architecture notes and Mermaid sources
-│   ├── assets/               # SVG diagrams and visual explanations
-│   ├── design/               # UI, accessibility and responsive guidance
-│   ├── engineering/          # State, rules, standards and maintenance
-│   ├── operations/           # Hosting, runbooks and releases
-│   ├── product/              # Requirements and player journeys
-│   ├── quality/              # Test strategy, cases and QA
-│   ├── screenshots/          # Screenshot capture guidance
-│   ├── security/             # Threat model and secure development
-│   └── templates/            # Reusable project templates
-├── public/                   # App icons and static assets
-├── scripts/                  # Repository and documentation validation
-├── server/                   # Legacy package manifests; no server source
+├── .github/                  # Issue/discussion forms, PR guidance and CI/security workflows
+├── docs/                     # Product, architecture, design, security and operations handbook
+├── public/                   # HTML entry, manifest, icons and static assets
+├── scripts/                  # Repository, project-tree and SVG validators
 └── src/
     ├── App.js                # Screen flow and shared theme
-    ├── components/
-    │   ├── Game.js           # UI state, turns and animation
-    │   ├── Board.js          # Grid composition
-    │   ├── Cell.js           # Cell and orb presentation
-    │   ├── WelcomePage.js    # Match setup and rules preview
-    │   └── ...               # Controls, title and diagnostics
+    ├── components/           # Title, setup, game, board, cells and controls
     └── game/
         ├── rules.js          # Pure move/cascade/player rules
         └── rules.test.js     # Deterministic rule tests
-~~~~
-
-Generated dependencies are not source files. The committed server/node_modules tree has been removed; install packages from lockfiles when needed. The server directory still has manifests only and is not a working backend.
+~~~
 
 ## ⌨️ Keyboard controls
 
-The game board is a semantic grid. Press **Tab** to enter the active cell, use **arrow keys** to move, **Home/End** to move to the first/last column, and **Ctrl+Home/Ctrl+End** to jump to the first/last cell. Press **Enter** or **Space** to activate a cell. The active turn is announced by the status region. Reduced-motion preferences are respected.
+Tab enters the active cell. Arrow keys move focus. Home/End move to the first/last column. Ctrl+Home/Ctrl+End move to the first/last cell. Enter/Space activates the cell. Turn state is announced through the status region. Reduced-motion preferences are respected.
 
-See [keyboard accessibility](docs/quality/keyboard-accessibility.md) and its [navigation diagram](docs/architecture/keyboard-navigation.mmd).
+See [keyboard accessibility](docs/quality/keyboard-accessibility.md) and [screen reader status](docs/accessibility/screen-reader-support.md).
 
 ## 📚 Documentation
 
-Start at the [documentation index](docs/README.md).
+Start at [docs/README.md](docs/README.md). The [repository enhancement audit](docs/repository-enhancement-audit.md) maps the master checklist to actual files and explicitly records non-applicable features.
 
 | Area | Documentation |
 |---|---|
-| Product | [Brief](docs/product/project-brief.md) · [Requirements](docs/product/requirements.md) · [Feature inventory](docs/product/feature-inventory.md) · [User stories](docs/product/user-stories.md) · [Use cases](docs/product/use-cases.md) · [Player journeys](docs/product/player-journeys.md) |
-| Gameplay | [Rules](docs/game-rules.md) · [Shared rules module](docs/engineering/game-rules-module.md) · [Strategy guide](docs/product/strategy-guide.md) · [Balance notes](docs/product/gameplay-balance.md) |
-| Architecture | [System architecture](docs/architecture.md) · [Game engine](docs/engineering/game-engine.md) · [State model](docs/engineering/state-model.md) · [Cascade algorithm](docs/architecture/cascade-resolution.md) · [Complexity](docs/architecture/algorithm-complexity.md) |
-| Engineering | [Development standards](docs/engineering/development-standards.md) · [Browser support](docs/engineering/browser-compatibility.md) · [Dependencies](docs/engineering/dependency-management.md) · [Repository hygiene](docs/engineering/repository-hygiene.md) |
-| Quality | [Testing strategy](docs/quality/testing-strategy.md) · [Engine test coverage](docs/quality/engine-test-coverage.md) · [Test cases](docs/quality/test-cases.md) · [QA checklist](docs/quality/qa-checklist.md) · [Regression matrix](docs/quality/regression-matrix.md) · [Playtest script](docs/quality/manual-playtest-script.md) · [Accessibility audit](docs/quality/accessibility-audit.md) |
-| Design | [Design system](docs/design/design-system.md) · [Responsive guidance](docs/design/responsive-guidelines.md) · [Accessibility](docs/design/accessibility.md) · [Motion](docs/design/motion-guidelines.md) |
-| Security | [Threat model](docs/security/threat-model.md) · [Data handling](docs/security/data-handling.md) · [Frontend security](docs/security/frontend-security.md) · [Dependency security](docs/security/dependency-security.md) |
-| Operations | [Runbook](docs/operations/runbook.md) · [Hosting](docs/operations/deployment-hosting.md) · [Environment](docs/operations/environment-configuration.md) · [Monitoring](docs/operations/monitoring.md) · [Backup/recovery](docs/operations/backup-recovery.md) · [Release/rollback](docs/operations/release-rollback.md) |
-| Reusable assets | [SVG/diagram index](docs/assets/README.md) · [Templates](docs/templates/README.md) · [Screenshot guide](docs/screenshots/README.md) |
+| Product | [Overview](docs/product/product-overview.md) · [Requirements](docs/product/requirements.md) · [Features](docs/product/features.md) · [Personas](docs/product/player-personas.md) · [Journeys](docs/product/player-journeys.md) |
+| Gameplay | [Rules](docs/game-rules.md) · [Rules module](docs/engineering/game-rules-module.md) · [Strategy](docs/product/strategy-guide.md) |
+| Architecture | [Architecture](docs/architecture.md) · [Technical overview](docs/technical-overview.md) · [Components](docs/component-architecture.md) · [Project structure](docs/project-structure.md) |
+| Engineering | [Standards](docs/code-standards.md) · [Dependencies](docs/external-dependencies.md) · [Configuration](docs/configuration.md) · [Technical debt](docs/engineering/technical-debt.md) |
+| API/data | [API status](docs/api.md) · [Database status](docs/database.md) · [Data flow](docs/data-flow.md) · [Integrations](docs/integrations.md) |
+| Quality | [Testing](docs/testing.md) · [Unit tests](docs/quality/unit-testing.md) · [Integration status](docs/quality/integration-testing.md) · [QA](docs/quality/qa-checklist.md) · [Quality gates](docs/quality/quality-gates.md) |
+| Design/accessibility | [Design system](docs/design/design-system.md) · [Tokens](docs/design/design-tokens.md) · [Accessibility](docs/accessibility.md) · [WCAG target/status](docs/accessibility/wcag-compliance.md) |
+| Security/privacy | [Security overview](docs/security.md) · [Threat model](docs/security/threat-model.md) · [Dependency security](docs/security/dependency-security.md) · [Privacy](docs/privacy.md) |
+| Operations | [Deployment](docs/deployment.md) · [CI/CD](docs/ci-cd.md) · [Runbook](docs/operations/runbook.md) · [Release/rollback](docs/operations/release-rollback.md) |
+| Reusable assets | [SVG/banner index](docs/assets/README.md) · [Templates](docs/templates/README.md) · [Screenshot guide](docs/screenshots/README.md) |
 
 ## 🧪 Quality and verification
 
-Pull requests are checked by GitHub Actions:
-- Frontend workflow installs from the root lockfile, runs Jest and builds the production bundle.
-- Documentation workflow checks local Markdown links and repository hygiene.
-- Scheduled dependency audit reports npm advisories and uploads a machine-readable artifact.
-- Dependency updates are reviewed through Dependabot and the lockfile.
+GitHub Actions runs:
+- Frontend CI: npm ci, Jest and production build.
+- Documentation: Markdown links, repository hygiene, generated tree and SVG validation.
+- CodeQL and secret scanning.
+- Dependency review and npm audit reporting.
+
+A green audit-report workflow means the report was generated and uploaded, not that every advisory is fixed.
 
 Run locally:
-
-~~~~bash
+~~~bash
 npm ci
 npm test -- --watchAll=false --runInBand
 npm run build
 python scripts/validate_docs.py
 python scripts/validate_repository.py
-~~~~
+python scripts/check_project_structure.py --check
+python scripts/validate_svg.py
+~~~
 
-The shared rules module has deterministic tests for neighbor geometry, critical mass, move legality, corner/edge/interior bursts, multi-wave cascades, cycle-limit rollback, opening participation and next-player selection. Full match integration tests and manual screen-reader/contrast verification remain open priorities. See [engine test coverage](docs/quality/engine-test-coverage.md) and [technical debt](docs/engineering/technical-debt.md).
+The rules module has deterministic tests for neighbor geometry, critical mass, move legality, bursts, cascades, cycle-limit rollback, opening participation and next-player selection. A component regression test verifies that input remains locked through cascade presentation. Full match integration tests and manual screen-reader/contrast verification remain open priorities.
 
 ## 🤝 Contributing
-Read [CONTRIBUTING.md](CONTRIBUTING.md), follow the [Code of Conduct](CODE_OF_CONDUCT.md), use the issue and PR templates, and update tests and documentation alongside behavior changes.
+Read [CONTRIBUTING.md](CONTRIBUTING.md), follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), use the issue and PR templates, and update tests/docs alongside behavior changes.
 
 ## 🔐 Security and privacy
-This is a local browser game, not a security-reviewed online service. Never place secrets in frontend source or public build-time environment variables. See [SECURITY.md](SECURITY.md), [PRIVACY.md](PRIVACY.md) and the [threat model](docs/security/threat-model.md).
+This is a local browser game, not a security-reviewed online service. Never put secrets in frontend source or public build-time variables. See [SECURITY.md](SECURITY.md), [PRIVACY.md](PRIVACY.md) and the [threat model](docs/security/threat-model.md).
 
 ## 🗺️ Roadmap
-Possible future directions include undo/replay, AI opponents, online rooms, an authoritative server and persisted match records. These are proposals, not shipped capabilities. See [ROADMAP.md](ROADMAP.md).
+Undo/replay, AI opponents, online rooms, an authoritative server and persisted match records are proposals, not shipped capabilities. See [ROADMAP.md](ROADMAP.md).
 
 ## 📄 License
-See [LICENSE](LICENSE) for repository license terms. Review third-party package and asset notices separately.
+The root [LICENSE](LICENSE) is limited to documentation-scope material. It does not automatically grant rights to pre-existing application code or third-party content. Review [asset attribution](ASSET_ATTRIBUTION.md) and source provenance before redistribution.
 
 <p align="center"><strong>💥 Make a move. Trigger a chain. Own the board.</strong></p>

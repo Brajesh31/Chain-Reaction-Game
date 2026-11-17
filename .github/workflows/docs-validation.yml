@@ -10,6 +10,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: docs-validation-\${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -22,3 +26,7 @@ jobs:
         run: python scripts/validate_docs.py
       - name: Validate repository hygiene
         run: python scripts/validate_repository.py
+      - name: Validate generated project structure
+        run: python scripts/check_project_structure.py --check
+      - name: Validate SVG assets
+        run: python scripts/validate_svg.py

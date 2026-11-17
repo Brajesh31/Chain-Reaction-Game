@@ -1,0 +1,23 @@
+title: "💡 Idea: "
+body:
+  - type: markdown
+    attributes:
+      value: "Ideas are proposals, not commitments. Include a player problem and expected outcome."
+  - type: textarea
+    id: problem
+    attributes:
+      label: Player problem
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Gameplay, accessibility and security impact
+    validations:
+      required: false

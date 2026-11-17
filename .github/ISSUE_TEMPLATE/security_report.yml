@@ -1,0 +1,25 @@
+name: "🔒 Security report"
+description: Guidance for reporting security issues without disclosing them publicly.
+title: "[Security]: "
+labels: ["security"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Do not publish exploit details, credentials, tokens or private data in this form.**
+        Use GitHub's private vulnerability reporting for this repository when available.
+        See SECURITY.md for the private disclosure route.
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Disclosure check
+      options:
+        - label: I understand that public issues are not appropriate for sensitive vulnerability details.
+          required: true
+  - type: textarea
+    id: safe_summary
+    attributes:
+      label: Non-sensitive summary
+      description: Provide only a high-level summary. Do not include a working exploit or secret.
+    validations:
+      required: false

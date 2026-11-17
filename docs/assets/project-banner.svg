@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="420" viewBox="0 0 1440 420" role="img" aria-labelledby="title desc">
+  <title id="title">Chain Reaction Game project banner</title>
+  <desc id="desc">Dark strategy-game banner with a glowing grid, red and cyan orbs, and the Chain Reaction Game title.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#141a25"/><stop offset="1" stop-color="#28384b"/></linearGradient>
+    <linearGradient id="titleFill" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#61dafb"/><stop offset="1" stop-color="#a4f4ff"/></linearGradient>
+    <radialGradient id="redOrb"><stop offset="0" stop-color="#ffd4d4"/><stop offset=".35" stop-color="#ff5252"/><stop offset="1" stop-color="#9c202e"/></radialGradient>
+    <radialGradient id="blueOrb"><stop offset="0" stop-color="#e3fcff"/><stop offset=".35" stop-color="#61dafb"/><stop offset="1" stop-color="#216b9b"/></radialGradient>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="7" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#8bdcf4" stroke-opacity=".14" stroke-width="2"/></pattern>
+  </defs>
+  <rect width="1440" height="420" rx="30" fill="url(#bg)"/>
+  <rect width="1440" height="420" rx="30" fill="url(#grid)"/>
+  <circle cx="1150" cy="205" r="180" fill="#61dafb" opacity=".05"/>
+  <circle cx="1290" cy="60" r="95" fill="#ff5252" opacity=".05"/>
+  <g opacity=".55" stroke="#61dafb" stroke-width="2" fill="none"><path d="M930 210H1060M1128 210H1240M1060 145V95M1060 275V325M1240 145V95M1240 275V325"/><circle cx="1094" cy="210" r="31" stroke-dasharray="5 9"/><circle cx="1274" cy="210" r="31" stroke-dasharray="5 9"/></g>
+  <g filter="url(#glow)"><circle cx="1060" cy="210" r="36" fill="url(#redOrb)"/><circle cx="1240" cy="210" r="36" fill="url(#blueOrb)"/><circle cx="1060" cy="95" r="18" fill="url(#redOrb)"/><circle cx="1060" cy="325" r="18" fill="url(#redOrb)"/><circle cx="1240" cy="95" r="18" fill="url(#blueOrb)"/><circle cx="1240" cy="325" r="18" fill="url(#blueOrb)"/></g>
+  <g fill="#ffffff"><text x="92" y="168" font-family="Segoe UI,Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="6" opacity=".75">A LOCAL STRATEGY GAME</text><text x="88" y="250" font-family="Segoe UI,Arial,sans-serif" font-size="72" font-weight="800" letter-spacing="-2" fill="url(#titleFill)">CHAIN REACTION</text><text x="94" y="302" font-family="Segoe UI,Arial,sans-serif" font-size="25" opacity=".82">Place an orb. Start a cascade. Own the board.</text></g>
+  <rect x="94" y="338" width="220" height="4" rx="2" fill="#61dafb" opacity=".75"/>
+</svg>

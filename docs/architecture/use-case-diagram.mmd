@@ -1,0 +1,21 @@
+flowchart LR
+  Player((Local player))
+  Maintainer((Maintainer))
+  subgraph Game[Chain Reaction browser game]
+    Setup[Choose player count and grid]
+    Move[Place orb]
+    View[View cascade and ownership]
+    Keyboard[Navigate grid by keyboard]
+    Reset[Reset match]
+    Theme[Toggle theme]
+    Diagnostics[View performance diagnostics]
+  end
+  Player --> Setup
+  Player --> Move
+  Player --> View
+  Player --> Keyboard
+  Player --> Reset
+  Player --> Theme
+  Player --> Diagnostics
+  Maintainer --> Tests[Run tests and build]
+  Maintainer --> Docs[Maintain documentation]

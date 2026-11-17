@@ -1,0 +1,14 @@
+title: "📢 Announcement: "
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Announcement
+    validations:
+      required: true
+  - type: input
+    id: reference
+    attributes:
+      label: Related release, pull request or documentation
+    validations:
+      required: false

@@ -1,83 +1,57 @@
 # 📚 Chain Reaction Documentation
 
-This handbook documents the current React implementation and separates shipped behavior from future proposals. The current game is local hot-seat play, not online multiplayer.
+This handbook documents the current React local hot-seat game. It separates implemented behavior, outstanding verification and future proposals. Start with [project structure](project-structure.md) and [repository enhancement audit](repository-enhancement-audit.md).
 
 ## Start here
-- [Project overview](../README.md)
+- [Product overview](product/product-overview.md)
+- [Project brief](product/project-brief.md)
 - [Rules](game-rules.md)
 - [Installation](installation.md)
 - [Development](development.md)
+- [Troubleshooting](troubleshooting.md)
 - [FAQ](faq.md)
 
 ## Product and gameplay
-- [Project brief](product/project-brief.md)
-- [Requirements](product/requirements.md)
-- [Feature inventory](product/feature-inventory.md)
-- [Player stories](product/user-stories.md)
-- [Use cases](product/use-cases.md)
-- [Player journeys](product/player-journeys.md)
-- [Player personas](product/player-personas.md)
-- [Strategy guide](product/strategy-guide.md)
-- [Balance notes](product/gameplay-balance.md)
+- [Background](product/project-background.md), [objectives](product/project-objectives.md)
+- [Problem](product/problem-statement.md), [solution](product/solution-overview.md)
+- [Features](product/features.md), [feature inventory](product/feature-inventory.md)
+- [Functional requirements](product/functional-requirements.md), [non-functional requirements](product/non-functional-requirements.md)
+- [Scope and limitations](scope-and-limitations.md)
+- [Personas](product/player-personas.md), [stories](product/user-stories.md), [use cases](product/use-cases.md), [journeys](product/player-journeys.md)
+- [Strategy](product/strategy-guide.md), [balance](product/gameplay-balance.md)
 
 ## Architecture and engineering
-- [Architecture](architecture.md)
+- [Architecture](architecture.md), [technical overview](technical-overview.md), [application lifecycle](application-lifecycle.md)
+- [Component architecture](component-architecture.md), [module documentation](module-documentation.md), [design patterns](design-patterns.md)
 - [Editable diagrams](architecture/README.md)
-- [Game engine design](engineering/game-engine.md)
-- [Shared rules module](engineering/game-rules-module.md)
-- [Branching and commits](engineering/branching-and-commits.md)
-- [Cascade resolution](architecture/cascade-resolution.md)
-- [Algorithm complexity](architecture/algorithm-complexity.md)
-- [State model](engineering/state-model.md)
-- [Development standards](engineering/development-standards.md)
-- [Browser compatibility](engineering/browser-compatibility.md)
-- [Dependency management](engineering/dependency-management.md)
-- [Repository hygiene](engineering/repository-hygiene.md)
-- [Technical debt](engineering/technical-debt.md)
-- [API and multiplayer status](api.md)
-- [Database status](database.md)
+- [Game engine](engineering/game-engine.md), [rules module](engineering/game-rules-module.md), [state model](engineering/state-model.md)
+- [Stack](technology-stack.md), [external dependencies](external-dependencies.md), [configuration](configuration.md), [environment variables](environment-variables.md)
+- [Code standards](code-standards.md), [development standards](engineering/development-standards.md), [project structure](project-structure.md)
+- [Data flow](data-flow.md), [validation](data-validation.md), [database status](database.md), [API status](api.md)
+- [Repository hygiene](engineering/repository-hygiene.md), [dependency management](engineering/dependency-management.md), [technical debt](engineering/technical-debt.md), [glossary](engineering/glossary.md)
 
-## Quality
-- [Testing strategy](quality/testing-strategy.md)
-- [Test cases](quality/test-cases.md)
-- [Engine test coverage](quality/engine-test-coverage.md)
-- [Keyboard accessibility](quality/keyboard-accessibility.md)
-- [Visual regression](quality/visual-regression.md)
-- [Test fixtures](quality/test-fixtures.md)
-- [Regression matrix](quality/regression-matrix.md)
-- [Browser matrix](quality/browser-matrix.md)
-- [Manual playtest script](quality/manual-playtest-script.md)
-- [QA checklist](quality/qa-checklist.md)
-- [Definition of done](quality/definition-of-done.md)
-- [Performance guidance](quality/performance.md)
-- [Performance testing](quality/performance-testing.md)
-- [Accessibility audit](quality/accessibility-audit.md)
+## UI/UX and accessibility
+- [UI guidelines](design/ui-guidelines.md), [design system](design/design-system.md), [tokens](design/design-tokens.md), [color](design/color-system.md), [typography](design/typography.md)
+- [Component library](design/component-library.md), [navigation](design/navigation-structure.md), [screens](design/page-documentation.md), [branding](design/branding-guidelines.md)
+- [Accessibility overview](accessibility.md), [WCAG target/status](accessibility/wcag-compliance.md), [keyboard](quality/keyboard-accessibility.md), [screen reader](accessibility/screen-reader-support.md), [contrast](accessibility/color-contrast.md), [testing](accessibility/accessibility-testing.md)
 
-## Design, security and operations
-- [Design system](design/design-system.md)
-- [Responsive guidelines](design/responsive-guidelines.md)
-- [Interaction patterns](design/interaction-patterns.md)
-- [Accessibility](design/accessibility.md)
-- [Motion](design/motion-guidelines.md)
-- [Threat model](security/threat-model.md)
-- [Data handling](security/data-handling.md)
-- [Dependency security audit](security/dependency-audit.md)
-- [Frontend security](security/frontend-security.md)
-- [Dependency security](security/dependency-security.md)
-- [Deployment](deployment.md)
-- [Hosting guide](operations/deployment-hosting.md)
-- [Environment configuration](operations/environment-configuration.md)
-- [Monitoring](operations/monitoring.md)
-- [Backup and recovery](operations/backup-recovery.md)
-- [Operations runbook](operations/runbook.md)
-- [Release and rollback](operations/release-rollback.md)
-- [Incident response](operations/incident-response.md)
-- [Troubleshooting](troubleshooting.md)
+## Security and privacy
+- [Security overview](security.md), [threat model](security/threat-model.md), [threat assessment](security/threat-assessment.md)
+- [Secret management](security/secret-management.md), [dependency security](security/dependency-security.md), [vulnerability management](security/vulnerability-management.md), [security testing](security/security-testing.md)
+- [Data handling](security/data-handling.md), [data protection](security/data-protection.md), [API authentication status](api-authentication.md)
+- [Privacy](privacy.md), [retention](data-retention.md), [deletion](data-deletion.md), [cookie status](cookie-policy.md), [compliance notes](compliance.md), [legal notes](legal-considerations.md)
 
-## Visual assets and templates
-- [SVG asset catalog](assets/README.md)
-- [Screenshot capture guide](screenshots/README.md)
-- [Reusable template index](templates/README.md)
+## Testing and operations
+- [Testing overview](testing.md), [strategy](quality/testing-strategy.md), [unit testing](quality/unit-testing.md), [integration testing](quality/integration-testing.md), [E2E status](quality/e2e-testing.md)
+- [Test cases](quality/test-cases.md), [fixtures](quality/test-fixtures.md), [coverage](quality/test-coverage.md), [QA](quality/qa-checklist.md), [quality gates](quality/quality-gates.md)
+- [Performance](quality/performance.md), [performance tests](quality/performance-testing.md), [visual regression](quality/visual-regression.md)
+- [Deployment](deployment.md), [production setup](production-setup.md), [hosting](hosting.md), [CI/CD](ci-cd.md), [GitHub Actions](github-actions.md)
+- [Operations runbook](operations/runbook.md), [monitoring](operations/monitoring.md), [backup/recovery](operations/backup-recovery.md), [incident response](operations/incident-response.md), [release/rollback](operations/release-rollback.md)
+
+## Maintenance and reusable resources
+- [Maintenance](maintenance.md), [known issues](known-issues.md), [risk register](risk-register.md), [deprecation policy](deprecation-policy.md), [migration guide](migration-guide.md), [decision log](decision-log.md), [contributor guide](contributor-guide.md)
+- [Asset catalog](assets/README.md), [screenshot guide](screenshots/README.md), [templates](templates/README.md)
+- [Master checklist mapping](repository-enhancement-audit.md)
 
 ## Accuracy policy
-Every document must distinguish implemented, partially implemented, planned and unknown. Never infer a working backend, persistence, authentication or online multiplayer from dependency declarations alone.
+A file name is not proof that a capability exists. Pages about API, authentication, database, encryption, analytics or online play must describe current absence and future prerequisites without inventing active services.
