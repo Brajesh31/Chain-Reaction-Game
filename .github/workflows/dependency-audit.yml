@@ -1,0 +1,57 @@
+name: Dependency Security Audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "17 8 * * 2"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: Report npm dependency advisories
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run npm audit
+        id: audit
+        shell: bash
+        run: |
+          set +e
+          npm audit --json > npm-audit.json
+          AUDIT_STATUS=$?
+          set -e
+          echo "npm audit exit code: $AUDIT_STATUS"
+          echo "audit_exit_code=$AUDIT_STATUS" >> "$GITHUB_OUTPUT"
+      - name: Summarize audit results
+        run: |
+          python scripts/summarize_npm_audit.py npm-audit.json | tee npm-audit-summary.md
+          cat npm-audit-summary.md >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "The npm audit command returned exit code ${{ steps.audit.outputs.audit_exit_code }}. This workflow is advisory-only while maintainers triage the legacy CRA dependency tree." >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload machine-readable audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report
+          path: |
+            npm-audit.json
+            npm-audit-summary.md
+          if-no-files-found: error
+          retention-days: 30

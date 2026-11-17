@@ -9,7 +9,8 @@ This changelog records repository documentation, engineering and tooling improve
 - Reusable review templates for ADRs, features, bugs, tests, gameplay rules, architecture, accessibility, security, dependencies, risks, playtests, incidents and releases.
 - Mermaid architecture/state/sequence diagrams and repository-owned SVG illustrations.
 - GitHub issue forms, pull-request template, CI, documentation validation, CodeQL, dependency review, Dependabot and tagged-release workflow.
-- Scripts to validate local Markdown links and tracked repository hygiene.
+- Scripts to validate local Markdown links, tracked repository hygiene and npm audit summaries.
+- A scheduled dependency-audit workflow that stores machine-readable advisories and a Markdown summary.
 - Accessible grid controls with named cells, ownership and orb counts, one-tab-stop keyboard navigation and live status announcements.
 - Component tests for cell accessibility and keyboard focus navigation.
 

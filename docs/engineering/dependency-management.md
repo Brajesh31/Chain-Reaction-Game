@@ -12,7 +12,7 @@ Root package.json and package-lock.json define the frontend dependency graph. Us
 6. Inspect bundle impact and transitive changes.
 7. Record migration and rollback notes.
 
-## Legacy server dependencies
-A server manifest and lockfile exist, but no server implementation source was identified. Express/Socket.IO dependencies do not provide online multiplayer. Decide whether to implement or retire these manifests separately.
+## Dependency scope
+The root manifest now contains only packages imported by the frontend or used by the test/build toolchain. Networking/server packages were removed because there is no server application. Online play requires a separate backend design and dependency review before any server packages are reintroduced.
 
 Never commit node_modules, build output, caches, credentials or local environment files.

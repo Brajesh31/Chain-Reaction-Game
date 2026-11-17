@@ -6,7 +6,7 @@
 | TD-02 | Screen-reader verification is not complete | Announcements can differ across browser/AT combinations | Complete manual assistive-technology testing | High |
 | TD-03 | Contrast, zoom and responsive accessibility need manual sign-off | Some players may be blocked | Review both themes, 200% zoom and narrow viewports | High |
 | TD-04 | Match state is not persisted | Reload loses the current game | Decide whether local save/resume is required | Low |
-| TD-05 | Server manifests exist without server source | Dependencies imply backend functionality that is not present | Implement intentionally or retire manifests and unused dependencies | Medium |
+| TD-05 | The Create React App toolchain contains legacy transitive advisories | Dependency vulnerabilities may affect build/development tools | Review the generated npm audit report and plan a controlled Vite migration | High |
 | TD-06 | A browser/runtime smoke matrix is not automated | Browser-specific layout defects may escape | Add browser automation if maintenance cost is justified | Medium |
 
 ## Resolved in current branch
@@ -14,7 +14,7 @@
 - Added deterministic move/cascade resolution and a bounded cycle safeguard.
 - Corrected the setup preview to use the shared critical-mass helper.
 - Added opening-turn winner protection and next-player skipping.
-- Removed tracked nested server dependency artifacts.
+- Removed tracked nested server dependency artifacts, empty server manifests and unused frontend server/network dependencies.
 - Added documentation and repository hygiene validation workflows.
 - Added native named cell buttons and one-tab-stop arrow-key grid navigation.
 - Added live announcements for turn changes and rejected moves.

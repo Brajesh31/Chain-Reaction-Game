@@ -19,13 +19,13 @@ This is a directional plan for the current React game prototype. It has no deliv
 - [x] Respect the operating-system reduced-motion preference.
 - [x] Add component tests for cell labeling and grid keyboard navigation.
 - [x] Use semantic row and gridcell elements without relying on `display: contents`.
+- [x] Remove unused frontend server/network dependencies and the empty nested server manifests.
 
 ## Near-term quality work
 - [ ] Add complete two-, three- and four-player match integration tests.
 - [ ] Verify reset/restart behavior after a completed match.
 - [ ] Perform manual screen-reader, contrast, zoom and reflow testing.
 - [ ] Add browser automation for the viewport matrix if it can be maintained reliably.
-- [ ] Decide whether the unused nested server package should become a real backend or be removed.
 
 ## Possible future features
 - Save and restore local match state.

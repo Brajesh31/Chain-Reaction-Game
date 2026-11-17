@@ -174,6 +174,7 @@ Start at the [documentation index](docs/README.md).
 Pull requests are checked by GitHub Actions:
 - Frontend workflow installs from the root lockfile, runs Jest and builds the production bundle.
 - Documentation workflow checks local Markdown links and repository hygiene.
+- Scheduled dependency audit reports npm advisories and uploads a machine-readable artifact.
 - Dependency updates are reviewed through Dependabot and the lockfile.
 
 Run locally:

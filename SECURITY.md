@@ -15,5 +15,5 @@ Ordinary gameplay bugs can be reported publicly. Never send real credentials as 
 - The current frontend does not define an authentication system, API, or persistent data store.
 - Do not add secrets to source or `REACT_APP_*` build variables; values embedded in a browser bundle are public to its users.
 - The current game state is local browser memory and is not suitable for authoritative online play or trust-sensitive outcomes.
-- The repository contains a `server` package manifest but no checked-in server application source. Do not assume the listed Express or Socket.IO packages provide a running service.
+- The repository contains no server application, server package manifest, API or online multiplayer service.
 - Review dependency provenance and licenses before deployment or redistribution. No security audit is claimed here.

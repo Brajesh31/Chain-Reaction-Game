@@ -61,6 +61,7 @@ This handbook documents the current React implementation and separates shipped b
 - [Motion](design/motion-guidelines.md)
 - [Threat model](security/threat-model.md)
 - [Data handling](security/data-handling.md)
+- [Dependency security audit](security/dependency-audit.md)
 - [Frontend security](security/frontend-security.md)
 - [Dependency security](security/dependency-security.md)
 - [Deployment](deployment.md)

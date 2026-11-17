@@ -17,9 +17,9 @@ Install dependencies from the root lockfile with `npm ci` or `npm install`, then
 
 - Create a focused branch from the current default branch.
 - Follow the existing React component and styled-components patterns unless the change intentionally improves them.
-- Keep game rules in sync across `Game.js`, the welcome-screen rule text, and the handbook. In particular, the current rules preview has a threshold mismatch documented in the README.
+- Keep gameplay rules in `src/game/rules.js` and reuse the shared helpers in the live game and welcome-screen preview. Update `docs/game-rules.md`, relevant diagrams and deterministic tests whenever rule behavior changes.
 - Avoid adding networking or persistence dependencies without a documented design and an actual server implementation.
-- Replace or extend the stale starter test when changing player-visible behavior. Describe what you actually ran; do not report the existing test as meaningful coverage without updating it.
+- Add or extend deterministic rule tests and component tests when changing player-visible behavior. Describe exactly which tests and build commands you ran.
 - Review the full diff for generated assets, build output, secrets, and unrelated changes.
 
 ## Pull requests
