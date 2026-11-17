@@ -1,0 +1,8 @@
+flowchart TB
+  P[2–4 local players] --> B[One browser session]
+  B --> R[React application]
+  R --> S[In-memory React game state]
+  R --> UI[Board, cells and controls]
+  S --> E[Turn and cascade rules]
+  E --> S
+  N[No API, database or network multiplayer] -.-> R
