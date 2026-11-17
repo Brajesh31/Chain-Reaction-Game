@@ -1,41 +1,54 @@
-# Architecture
+# 🏗️ Architecture
 
-## System overview
+## System boundary
+The checked-in application is a client-side React single-page game. The browser owns the match session. There is no runtime API, database, account system or online game service.
 
-The checked-in application is a client-side React single-page game created with Create React App. It does not communicate with a backend, API, database, or online game service. Game state is held in React component state in the current browser session.
-
-```text
-Browser
-  -> public/index.html (Create React App HTML shell)
-  -> src/index.js (React root)
-  -> src/App.js (welcome/title/game screen flow and theme)
-  -> WelcomePage / FloatingBubblesPage / Game
-  -> Board -> Cell
+```mermaid
+flowchart TB
+  U[Local players] --> B[Browser]
+  B --> H[public/index.html]
+  H --> R[src/index.js]
+  R --> A[src/App.js]
+  A --> W[WelcomePage]
+  A --> T[FloatingBubblesPage]
+  A --> G[Game]
+  G --> C[Board]
+  C --> X[Cell]
+  G --> S[React component state]
 ```
 
-## Main components
+## Component responsibilities
 
-- `src/index.js`: mounts `App` in React Strict Mode and registers the Web Vitals helper.
-- `src/App.js`: controls the title, settings, and game screens, initial grid/player settings, and shared theme.
-- `src/components/FloatingBubblesPage.js`: animated title page.
-- `src/components/WelcomePage.js`: grid and player selection, rule preview, and displayed game rules.
-- `src/components/Game.js`: board state, legal-move checks, player turns, critical mass, chain reactions, winner status, and performance controls.
-- `src/components/Board.js`: maps the two-dimensional game grid into cells.
-- `src/components/Cell.js`: renders the orb contents and visual explosion effects.
-- `src/components/GameControls.js`: reset, theme, and monitor controls.
-- `src/components/PerformanceMonitor.js`: displays browser FPS, memory when available, and render-related metrics.
-- `public/`: HTML shell, icons, and web-app manifest.
+| Module | Responsibility |
+|---|---|
+| `src/index.js` | React root and Web Vitals setup |
+| `src/App.js` | Screen transitions, setup settings and shared theme |
+| `FloatingBubblesPage.js` | Animated title page |
+| `WelcomePage.js` | Grid/player setup and rule preview |
+| `Game.js` | Board state, moves, turns, cascades and winner logic |
+| `Board.js` | Two-dimensional grid rendering |
+| `Cell.js` | Cell, orb and explosion presentation |
+| `GameControls.js` | Reset, theme and performance controls |
+| `PerformanceMonitor.js` | Browser-side diagnostics |
 
-## Game state and turn flow
+## State ownership
+Game state is held in React component state. It includes the board, current player, player count, terminal status and presentation settings. There is no durable store.
 
-Each cell contains an owner number and an orb count. Owner `0` means empty; player numbers identify the local players. A valid move adds one orb to an empty cell or a cell belonging to the active player. When the count reaches the cell's critical mass, the game queues explosions, resets the exploding cell, and gives one orb to each orthogonal neighbor. Those neighboring cells become owned by the active player, allowing cascades to capture other players' cells.
+## Networking status
+Express and Socket.IO packages appear in manifests, but inspection found no server entry point, HTTP routes, socket handlers, client connection, database adapter or authentication. The nested `server` folder has manifests only. Dependency presence is not a feature.
 
-The current engine derives critical mass from neighbor count: corners 2, edges 3, interior cells 4. The welcome-page preview derives corner/edge/interior display values as 1/2/3, so the preview does not match the engine.
+## Future online architecture (not implemented)
 
-## Networking and persistence status
+```mermaid
+flowchart LR
+  A[Player browser A] <-->|Proposed events| S[Authoritative server]
+  B[Player browser B] <-->|Proposed events| S
+  S --> V[Validate identity, room and turn]
+  V --> E[Pure game engine]
+  E --> D[(Optional match store)]
+  E --> P[Broadcast authoritative state]
+  P --> A
+  P --> B
+```
 
-The root package lists Express, Socket.IO, and their client library, and a nested `server/package.json` lists server dependencies. However, the tracked `server` directory contains package manifests and lockfile only; no server entry point or route/event handler is present. The frontend contains no Socket.IO client connection. Package dependencies alone do not implement online multiplayer. There is no database or state persistence.
-
-## Repository maintenance observation
-
-The repository currently tracks files under `server/node_modules`. The root `.gitignore` ignores root `node_modules` but does not remove already tracked nested files. A dependency-artifact cleanup would need its own carefully reviewed change; this handbook does not remove those files.
+Before implementation define event schemas, identity, room lifecycle, reconnect behavior, rate limits and server-side move validation. See [API status](api.md) and [threat model](security/threat-model.md).
