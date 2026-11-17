@@ -374,7 +374,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
     setGrid(newGrid);
     setIsAnimating(false);
     togglePlayer();
-  }, [currentPlayer, gridSize.rows, gridSize.cols, capacityMap, getAdjacentCells, togglePlayer, playerCount]);
+  }, [currentPlayer, capacityMap, getAdjacentCells, togglePlayer, playerCount]);
 
   // Optimize cell click handler
   const handleCellClick = useCallback((row, col) => {
