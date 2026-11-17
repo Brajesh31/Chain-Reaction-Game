@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Board from './Board';
 import GameControls from './GameControls';
 import PerformanceMonitor from './PerformanceMonitor';
+import { getCriticalMass, getOrthogonalNeighbors, isLegalMove } from '../game/rules';
 
 const GameContainer = styled.div`
   display: flex;
@@ -206,20 +207,9 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   const [isMaximized, setIsMaximized] = useState(false);
 
   // Calculate the maximum capacity for a cell based on its position
-  const getMaxCapacity = useCallback((row, col) => {
-    const isCorner =
-      (row === 0 && col === 0) ||
-      (row === 0 && col === gridSize.cols - 1) ||
-      (row === gridSize.rows - 1 && col === 0) ||
-      (row === gridSize.rows - 1 && col === gridSize.cols - 1);
-
-    const isEdge =
-      row === 0 || col === 0 || row === gridSize.rows - 1 || col === gridSize.cols - 1;
-
-    if (isCorner) return 2;  // Corner cells: 2 adjacent cells
-    if (isEdge) return 3;    // Edge cells: 3 adjacent cells
-    return 4;                // Center cells: 4 adjacent cells
-  }, [gridSize.rows, gridSize.cols]);
+  const getMaxCapacity = useCallback((row, col) => (
+    getCriticalMass(row, col, gridSize.rows, gridSize.cols)
+  ), [gridSize.rows, gridSize.cols]);
 
   // Memoize the grid capacity map
   const capacityMap = React.useMemo(() => {
@@ -294,14 +284,9 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   }, [gridSize, resetGame]);
 
   // Memoize adjacent cells calculation
-  const getAdjacentCells = useCallback((row, col) => {
-    return [
-      row > 0 ? [row - 1, col] : null,
-      row < gridSize.rows - 1 ? [row + 1, col] : null,
-      col > 0 ? [row, col - 1] : null,
-      col < gridSize.cols - 1 ? [row, col + 1] : null,
-    ].filter(Boolean);
-  }, [gridSize.rows, gridSize.cols]);
+  const getAdjacentCells = useCallback((row, col) => (
+    getOrthogonalNeighbors(row, col, gridSize.rows, gridSize.cols)
+  ), [gridSize.rows, gridSize.cols]);
 
   // Toggle between players
   const togglePlayer = useCallback(() => {
@@ -406,7 +391,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
     const maxCapacity = capacityMap[row][col];
     
     // Check if the move is valid
-    if (cell.owner !== 0 && cell.owner !== currentPlayer) return;
+    if (!isLegalMove(cell, currentPlayer)) return;
     if (cell.count + 1 > maxCapacity) return;
 
     // Update the grid with the new orb

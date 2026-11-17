@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
+import { getCriticalMass } from '../game/rules';
 
 const pulse = keyframes`
   0%, 100% {
@@ -753,21 +754,9 @@ const WelcomePage = ({ onEnter, theme, setTheme }) => {
     });
   };
 
-  const getCellCapacity = (row, col, rows, cols) => {
-    // Corner cells
-    if ((row === 0 && col === 0) || 
-        (row === 0 && col === cols - 1) ||
-        (row === rows - 1 && col === 0) ||
-        (row === rows - 1 && col === cols - 1)) {
-      return 2;
-    }
-    // Edge cells (except corners)
-    if (row === 0 || row === rows - 1 || col === 0 || col === cols - 1) {
-      return 3;
-    }
-    // Center cells
-    return 4;
-  };
+  const getCellCapacity = (row, col, rows, cols) => (
+    getCriticalMass(row, col, rows, cols)
+  );
 
   const renderGridPreview = () => {
     const cells = [];
