@@ -104,20 +104,27 @@ The repository currently tracks files under `server/node_modules`. Do not add mo
 
 ## 📚 Documentation
 - [Documentation index](docs/README.md)
+- [Product brief](docs/product/project-brief.md)
+- [Requirements](docs/product/requirements.md)
+- [Feature inventory](docs/product/feature-inventory.md)
+- [Player stories](docs/product/user-stories.md)
+- [Use cases](docs/product/use-cases.md)
+- [Player journeys](docs/product/player-journeys.md)
 - [Rules and gameplay](docs/game-rules.md)
 - [Architecture](docs/architecture.md)
-- [Engine design](docs/engineering/game-engine.md)
+- [Game engine](docs/engineering/game-engine.md)
 - [State model](docs/engineering/state-model.md)
-- [Development](docs/development.md)
+- [Development standards](docs/engineering/development-standards.md)
+- [Repository hygiene](docs/engineering/repository-hygiene.md)
 - [Testing strategy](docs/quality/testing-strategy.md)
+- [QA checklist](docs/quality/qa-checklist.md)
 - [Test cases](docs/quality/test-cases.md)
-- [Accessibility](docs/design/accessibility.md)
-- [Deployment](docs/deployment.md)
-- [Threat model](docs/security/threat-model.md)
+- [Accessibility audit](docs/quality/accessibility-audit.md)
+- [Security](docs/security/threat-model.md)
 - [Operations runbook](docs/operations/runbook.md)
-- [Templates](docs/templates/README.md)
+- [Release and rollback](docs/operations/release-rollback.md)
+- [Reusable templates](docs/templates/README.md)
 - [Roadmap](ROADMAP.md)
-
 ## 🧰 Technology
 React 19, React DOM, Create React App / react-scripts 5, Framer Motion, Styled Components, React Toastify, Jest and React Testing Library dependencies.
 
