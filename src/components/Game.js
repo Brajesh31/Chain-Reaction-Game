@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Board from './Board';
 import GameControls from './GameControls';
 import PerformanceMonitor from './PerformanceMonitor';
-import { getCriticalMass, getOrthogonalNeighbors, isLegalMove, getWinner } from '../game/rules';
+import { getNextPlayer, getWinner, resolveMove } from '../game/rules';
 
 const GameContainer = styled.div`
   display: flex;
@@ -198,6 +198,8 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [moveMessage, setMoveMessage] = useState('');
+  const moveTimeoutRef = useRef(null);
   const [playerCount] = useState(initialPlayerCount || 2); // Fixed for the duration of a match
   const [playersWhoHaveMoved, setPlayersWhoHaveMoved] = useState([]);
   const [showPerformanceMonitor, setShowPerformanceMonitor] = useState(false);
@@ -206,22 +208,6 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   const cellUpdateCountRef = useRef(0);
   const performanceMetricsRef = useRef(null);
   const [isMaximized, setIsMaximized] = useState(false);
-
-  // Calculate the maximum capacity for a cell based on its position
-  const getMaxCapacity = useCallback((row, col) => (
-    getCriticalMass(row, col, gridSize.rows, gridSize.cols)
-  ), [gridSize.rows, gridSize.cols]);
-
-  // Memoize the grid capacity map
-  const capacityMap = React.useMemo(() => {
-    const map = Array(gridSize.rows).fill(null).map(() => Array(gridSize.cols).fill(0));
-    for (let row = 0; row < gridSize.rows; row++) {
-      for (let col = 0; col < gridSize.cols; col++) {
-        map[row][col] = getMaxCapacity(row, col);
-      }
-    }
-    return map;
-  }, [gridSize.rows, gridSize.cols, getMaxCapacity]);
 
   // Progressive loading for large grids
   const initializeGridProgressively = useCallback(async (rows, cols) => {
@@ -274,7 +260,12 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
       setGrid(newGrid);
     }
     
+    if (moveTimeoutRef.current) {
+      clearTimeout(moveTimeoutRef.current);
+      moveTimeoutRef.current = null;
+    }
     setCurrentPlayer(1);
+    setMoveMessage('');
     setGameOver(false);
     setWinner(null);
     setPlayersWhoHaveMoved([]);
@@ -284,16 +275,6 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   useEffect(() => {
     resetGame();
   }, [gridSize, resetGame]);
-
-  // Memoize adjacent cells calculation
-  const getAdjacentCells = useCallback((row, col) => (
-    getOrthogonalNeighbors(row, col, gridSize.rows, gridSize.cols)
-  ), [gridSize.rows, gridSize.cols]);
-
-  // Toggle between players
-  const togglePlayer = useCallback(() => {
-    setCurrentPlayer((player) => (player >= playerCount ? 1 : player + 1));
-  }, [playerCount]);
 
   // Performance monitoring
   useEffect(() => {
@@ -311,107 +292,65 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // Update processExplosions to track performance
-  const processExplosions = useCallback((currentGrid, startRow, startCol, participatingPlayers) => {
-    const startTime = performance.now();
-    
-    const newGrid = JSON.parse(JSON.stringify(currentGrid));
-    const explosionQueue = [[startRow, startCol]];
-    const processed = new Set();
-    const updates = new Map();
-    
-    while (explosionQueue.length > 0) {
-      const [row, col] = explosionQueue.shift();
-      const key = `${row},${col}`;
-      
-      if (processed.has(key)) continue;
-      processed.add(key);
-      cellUpdateCountRef.current++;
-      
-      const cell = newGrid[row][col];
-      const maxCapacity = capacityMap[row][col];
-      
-      if (cell.count >= maxCapacity) {
-        // Reset current cell
-        updates.set(key, { owner: 0, count: 0 });
-        
-        // Get adjacent cells
-        const adjacentCells = getAdjacentCells(row, col);
-        
-        // Distribute orbs
-        for (const [adjRow, adjCol] of adjacentCells) {
-          const adjKey = `${adjRow},${adjCol}`;
-          const currentUpdate = updates.get(adjKey) || newGrid[adjRow][adjCol];
-          
-          const newCount = currentUpdate.count + 1;
-          updates.set(adjKey, {
-            owner: currentPlayer,
-            count: newCount
-          });
-          
-          if (newCount >= capacityMap[adjRow][adjCol]) {
-            explosionQueue.push([adjRow, adjCol]);
-          }
-        }
-      }
-    }
-    
-    renderTimeRef.current = performance.now() - startTime;
-    
-    // Apply all updates at once
-    updates.forEach((value, key) => {
-      const [row, col] = key.split(',').map(Number);
-      newGrid[row][col] = value;
-    });
-    
-    // A winner can be declared only after every configured player has moved.
-    const resolvedWinner = getWinner(newGrid, playerCount, participatingPlayers);
-    if (resolvedWinner !== null) {
-      setGameOver(true);
-      setWinner(resolvedWinner);
-    }
-    
-    setGrid(newGrid);
-    setIsAnimating(false);
-    togglePlayer();
-  }, [currentPlayer, capacityMap, getAdjacentCells, togglePlayer, playerCount]);
-
-  // Optimize cell click handler
   const handleCellClick = useCallback((row, col) => {
-    if (gameOver || isAnimating) return;
+    if (gameOver || isAnimating || isLoading) return;
 
-    const cell = grid[row][col];
-    const maxCapacity = capacityMap[row][col];
-    
-    // Check if the move is valid
-    if (!isLegalMove(cell, currentPlayer)) return;
-    if (cell.count + 1 > maxCapacity) return;
+    const startedAt = performance.now();
+    const result = resolveMove(grid, row, col, currentPlayer);
 
-    // Remember each player's first successful move for correct endgame checks.
+    if (!result.ok) {
+      setMoveMessage(
+        result.reason === 'cascade-limit'
+          ? 'This move creates a chain that cannot settle safely. The move was cancelled.'
+          : 'Invalid move. Select an empty cell or one of your own cells.'
+      );
+      return;
+    }
+
+    setMoveMessage('');
     const participatingPlayers = playersWhoHaveMoved.includes(currentPlayer)
       ? playersWhoHaveMoved
       : [...playersWhoHaveMoved, currentPlayer];
     setPlayersWhoHaveMoved(participatingPlayers);
 
-    // Update the grid with the new orb
-    const newGrid = grid.map(row => [...row]);
-    newGrid[row][col] = {
-      owner: currentPlayer,
-      count: cell.count + 1,
+    renderTimeRef.current = performance.now() - startedAt;
+    cellUpdateCountRef.current += result.changedCells;
+
+    const commitMove = () => {
+      setGrid(result.grid);
+      setIsAnimating(false);
+      moveTimeoutRef.current = null;
+
+      const resolvedWinner = getWinner(result.grid, playerCount, participatingPlayers);
+      if (resolvedWinner !== null) {
+        setGameOver(true);
+        setWinner(resolvedWinner);
+        return;
+      }
+
+      setCurrentPlayer(getNextPlayer(result.grid, playerCount, currentPlayer, participatingPlayers));
     };
 
-    // Check if the cell will explode
-    if (newGrid[row][col].count >= maxCapacity) {
+    if (result.bursts > 0) {
       setIsAnimating(true);
-      setGrid(newGrid);
-      setTimeout(() => {
-        processExplosions(newGrid, row, col, participatingPlayers);
-      }, 300);
+      setGrid(result.previewGrid);
+      moveTimeoutRef.current = setTimeout(commitMove, 300);
     } else {
-      setGrid(newGrid);
-      togglePlayer();
+      commitMove();
     }
-  }, [gameOver, isAnimating, grid, currentPlayer, capacityMap, processExplosions, togglePlayer, playersWhoHaveMoved]);
+  }, [
+    gameOver,
+    isAnimating,
+    isLoading,
+    grid,
+    currentPlayer,
+    playerCount,
+    playersWhoHaveMoved,
+  ]);
+
+  useEffect(() => () => {
+    if (moveTimeoutRef.current) clearTimeout(moveTimeoutRef.current);
+  }, []);
 
   // Get player name by number
   const getPlayerName = (playerNumber) => {
@@ -451,6 +390,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
         )}
       </ControlsContainer>
       
+      {moveMessage && <div role="alert" aria-live="assertive">{moveMessage}</div>}
       <BoardWrapper>
         <GameBoard theme={theme}>
           <MaximizeButton onClick={toggleMaximize} theme={theme} title={isMaximized ? "Minimize" : "Maximize"}>
