@@ -16,6 +16,7 @@ This handbook documents the current React implementation and separates shipped b
 - [Player stories](product/user-stories.md)
 - [Use cases](product/use-cases.md)
 - [Player journeys](product/player-journeys.md)
+- [Player personas](product/player-personas.md)
 - [Strategy guide](product/strategy-guide.md)
 - [Balance notes](product/gameplay-balance.md)
 
@@ -23,6 +24,8 @@ This handbook documents the current React implementation and separates shipped b
 - [Architecture](architecture.md)
 - [Editable diagrams](architecture/README.md)
 - [Game engine design](engineering/game-engine.md)
+- [Shared rules module](engineering/game-rules-module.md)
+- [Branching and commits](engineering/branching-and-commits.md)
 - [Cascade resolution](architecture/cascade-resolution.md)
 - [Algorithm complexity](architecture/algorithm-complexity.md)
 - [State model](engineering/state-model.md)
@@ -37,6 +40,8 @@ This handbook documents the current React implementation and separates shipped b
 ## Quality
 - [Testing strategy](quality/testing-strategy.md)
 - [Test cases](quality/test-cases.md)
+- [Engine test coverage](quality/engine-test-coverage.md)
+- [Visual regression](quality/visual-regression.md)
 - [Test fixtures](quality/test-fixtures.md)
 - [Regression matrix](quality/regression-matrix.md)
 - [Browser matrix](quality/browser-matrix.md)
