@@ -2,53 +2,63 @@ import React from 'react';
 import styled from 'styled-components';
 import Cell from './Cell';
 
-const BoardContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(${(props) => props.cols}, ${props => props.isMaximized ? '120px' : '90px'});
-  grid-template-rows: repeat(${(props) => props.rows}, ${props => props.isMaximized ? '120px' : '90px'});
-  gap: ${props => props.isMaximized ? '8px' : '6px'};
-  background: ${props => props.theme === 'light' ? 
-    'linear-gradient(145deg, #ffffff, #f5f5f5)' : 
-    'linear-gradient(145deg, #2c3138, #23272b)'};
-  padding: ${props => props.isMaximized ? '30px' : '20px'};
-  border-radius: 16px;
-  box-shadow: ${props => props.theme === 'light' ?
-    '0 25px 50px rgba(0, 0, 0, 0.2), inset 0 -5px 15px rgba(0, 0, 0, 0.1)' :
-    '0 25px 50px rgba(0, 0, 0, 0.4), inset 0 -5px 15px rgba(0, 0, 0, 0.5)'};
-  transform: perspective(1200px) rotateX(10deg);
-  transform-style: preserve-3d;
-  transition: all 0.3s ease;
-  width: fit-content;
-  margin: 0 auto;
-  position: relative;
+const BoardContainer = styled.div((props) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: props.isMaximized ? '8px' : '6px',
+  background: props.theme === 'light'
+    ? 'linear-gradient(145deg, #ffffff, #f5f5f5)'
+    : 'linear-gradient(145deg, #2c3138, #23272b)',
+  padding: props.isMaximized ? '30px' : '20px',
+  borderRadius: '16px',
+  boxShadow: props.theme === 'light'
+    ? '0 25px 50px rgba(0, 0, 0, 0.2), inset 0 -5px 15px rgba(0, 0, 0, 0.1)'
+    : '0 25px 50px rgba(0, 0, 0, 0.4), inset 0 -5px 15px rgba(0, 0, 0, 0.5)',
+  transform: 'perspective(1200px) rotateX(10deg)',
+  transformStyle: 'preserve-3d',
+  transition: 'transform 0.3s ease',
+  width: 'fit-content',
+  margin: '0 auto',
+  position: 'relative',
+  '&:hover': {
+    transform: 'perspective(1200px) rotateX(5deg)',
+  },
+  '@media (max-width: 768px)': {
+    gap: '4px',
+    padding: '15px',
+    transform: 'perspective(1200px) rotateX(7deg)',
+  },
+  '@media (max-width: 480px)': {
+    gap: '3px',
+    padding: '10px',
+    transform: 'perspective(1200px) rotateX(5deg)',
+  },
+}));
 
-  &:hover {
-    transform: perspective(1200px) rotateX(5deg);
-  }
+const BoardRow = styled.div((props) => ({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(' + props.cols + ', ' + (props.isMaximized ? '120px' : '90px') + ')',
+  gap: props.isMaximized ? '8px' : '6px',
+  '@media (max-width: 1400px)': {
+    gridTemplateColumns: 'repeat(' + props.cols + ', ' + (props.isMaximized ? '100px' : '80px') + ')',
+    gap: props.isMaximized ? '7px' : '6px',
+  },
+  '@media (max-width: 768px)': {
+    gridTemplateColumns: 'repeat(' + props.cols + ', 60px)',
+    gap: '4px',
+  },
+  '@media (max-width: 480px)': {
+    gridTemplateColumns: 'repeat(' + props.cols + ', 45px)',
+    gap: '3px',
+  },
+}));
 
-  @media (max-width: 1400px) {
-    grid-template-columns: repeat(${(props) => props.cols}, ${props => props.isMaximized ? '100px' : '80px'});
-    grid-template-rows: repeat(${(props) => props.rows}, ${props => props.isMaximized ? '100px' : '80px'});
-    gap: ${props => props.isMaximized ? '7px' : '6px'};
-    padding: ${props => props.isMaximized ? '25px' : '20px'};
-  }
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(${(props) => props.cols}, 60px);
-    grid-template-rows: repeat(${(props) => props.rows}, 60px);
-    gap: 4px;
-    padding: 15px;
-    transform: perspective(1200px) rotateX(7deg);
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: repeat(${(props) => props.cols}, 45px);
-    grid-template-rows: repeat(${(props) => props.rows}, 45px);
-    gap: 3px;
-    padding: 10px;
-    transform: perspective(1200px) rotateX(5deg);
-  }
-`;
+const GridCellFrame = styled.div({
+  width: '100%',
+  height: '100%',
+  minWidth: 0,
+  minHeight: 0,
+});
 
 const Board = ({
   grid,
@@ -73,7 +83,7 @@ const Board = ({
       theme={theme}
     >
       {grid.map((row, rowIndex) => (
-        <div role="row" key={`row-${rowIndex}`} style={{ display: 'contents' }}>
+        <BoardRow role="row" key={`row-${rowIndex}`} cols={grid[0].length} isMaximized={isMaximized}>
           {row.map((cell, colIndex) => {
             const index = rowIndex * grid[0].length + colIndex;
             const moveFocus = (event) => {
@@ -110,12 +120,11 @@ const Board = ({
             };
 
             return (
-              <div
+              <GridCellFrame
                 role="gridcell"
                 aria-rowindex={rowIndex + 1}
                 aria-colindex={colIndex + 1}
                 key={`cell-wrapper-${rowIndex}-${colIndex}`}
-                style={{ width: '100%', height: '100%' }}
               >
                 <Cell
                   row={rowIndex}
@@ -131,10 +140,10 @@ const Board = ({
                   playerColors={playerColors}
                   theme={theme}
                 />
-              </div>
+              </GridCellFrame>
             );
           })}
-        </div>
+        </BoardRow>
       ))}
     </BoardContainer>
   );

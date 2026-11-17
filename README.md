@@ -43,6 +43,8 @@ Chain Reaction is a shared-device strategy game. Two to four players take turns 
 | Capture | Affected neighbors become owned by initiating player | Implemented |
 | Presentation | Animated orbs, title screen and theme controls | Implemented |
 | Diagnostics | Optional browser performance overlay | Implemented |
+| Keyboard play | One-tab-stop grid with arrow/Home/End navigation | Implemented |
+| Reduced motion | Honors operating-system reduced-motion preference | Implemented |
 | Online play | Rooms, remote players and authoritative server | Not implemented |
 | Persistence | Accounts, database and saved matches | Not implemented |
 
@@ -145,6 +147,12 @@ Deploy the contents of build/ to a static host. Configure an SPA fallback to ind
 
 Generated dependencies are not source files. The committed server/node_modules tree has been removed; install packages from lockfiles when needed. The server directory still has manifests only and is not a working backend.
 
+## ⌨️ Keyboard controls
+
+The game board is a semantic grid. Press **Tab** to enter the active cell, use **arrow keys** to move, **Home/End** to move to the first/last column, and **Ctrl+Home/Ctrl+End** to jump to the first/last cell. Press **Enter** or **Space** to activate a cell. The active turn is announced by the status region. Reduced-motion preferences are respected.
+
+See [keyboard accessibility](docs/quality/keyboard-accessibility.md) and its [navigation diagram](docs/architecture/keyboard-navigation.mmd).
+
 ## 📚 Documentation
 
 Start at the [documentation index](docs/README.md).
@@ -178,7 +186,7 @@ python scripts/validate_docs.py
 python scripts/validate_repository.py
 ~~~~
 
-The shared rules module has deterministic tests for neighbor geometry, critical mass, move legality, corner/edge/interior bursts, multi-wave cascades, cycle-limit rollback, opening participation and next-player selection. Full match integration tests and accessibility verification remain open priorities. See [engine test coverage](docs/quality/engine-test-coverage.md) and [technical debt](docs/engineering/technical-debt.md).
+The shared rules module has deterministic tests for neighbor geometry, critical mass, move legality, corner/edge/interior bursts, multi-wave cascades, cycle-limit rollback, opening participation and next-player selection. Full match integration tests and manual screen-reader/contrast verification remain open priorities. See [engine test coverage](docs/quality/engine-test-coverage.md) and [technical debt](docs/engineering/technical-debt.md).
 
 ## 🤝 Contributing
 Read [CONTRIBUTING.md](CONTRIBUTING.md), follow the [Code of Conduct](CODE_OF_CONDUCT.md), use the issue and PR templates, and update tests and documentation alongside behavior changes.
