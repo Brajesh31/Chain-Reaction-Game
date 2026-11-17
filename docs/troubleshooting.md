@@ -1,31 +1,28 @@
-# Troubleshooting
+# 🧰 Troubleshooting
 
-## `npm start` cannot find dependencies
+## Development server fails
+Confirm repository root, Node/npm installation and run `npm ci`. Check port 3000 and read the first actionable terminal error.
 
-Run `npm ci` from the repository root and check that it completes successfully. Do not assume a nested `server/node_modules` installation satisfies the root React package.
+## Build fails
+Reinstall from lockfile, confirm CRA-compatible Node version and inspect the first compiler error. Do not commit node_modules to work around dependency issues.
 
-## Browser page is blank or does not load
+## Test fails on “learn react”
+The test is the default CRA starter sample. The game no longer renders that link. Replace the test with game behavior assertions instead of restoring obsolete starter UI.
 
-- Check the terminal running Create React App for compile errors.
-- Confirm JavaScript is enabled and reload the development URL printed by `npm start`.
-- Check browser developer tools for runtime errors. Include the relevant component and reproduction steps in an issue, but remove personal paths and private values.
+## Move is rejected
+Only an empty cell or cell owned by the active player can be selected. Opponent-owned cell rejection is expected.
 
-## The test fails looking for “learn react”
+## Explosion threshold confusion
+Engine thresholds are corner 2, edge 3, interior 4. Welcome-page preview currently shows 1/2/3 and is inconsistent.
 
-`src/App.test.js` still contains the Create React App starter assertion. The game replaced the starter screen, so update the test to cover current UI behavior before relying on it.
+## Progress disappears
+State lives in React memory. Reload loses the match; persistent saves are not implemented.
 
-## Game preview and actual capacity disagree
+## Multiplayer across devices
+Not available. Socket.IO packages alone do not make a server or connect a client.
 
-The welcome-page preview calculates corner/edge/interior values as 1/2/3. The engine uses 2/3/4 based on adjacent cells. The preview is not authoritative; the mismatch is a documented issue to fix and test.
+## Server folder
+Contains package manifests and tracked dependency artifacts, but no application entry point.
 
-## A cascade gives an unexpected result
-
-The cascade queue and its processed-cell tracking need dedicated tests for multiple hits and repeated bursts in the same chain. Record the grid, current player, and sequence of moves that reproduce the issue.
-
-## Online play or server startup is unavailable
-
-The current project is local hot-seat play. Socket.IO dependencies are present, but there is no checked-in server program or frontend socket client. No server command or public API is available.
-
-## Static build does not work at a subpath
-
-Create React App assets may need a deployment base path setting, and a static host may need an SPA fallback. See [deployment.md](deployment.md) and use the host's instructions for the chosen URL layout.
+## Report a defect
+Use the bug template. Include browser, OS, board size, player count, reproduction steps and expected/actual behavior. Remove secrets from logs.
