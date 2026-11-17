@@ -1,34 +1,42 @@
-# Development
+# 🛠️ Development Guide
 
-## Start the frontend
+## Prerequisites
+Use Node.js compatible with the Create React App 5 dependency tree and npm. The project uses npm lockfiles. Do not mix package managers.
 
-Install from the root lockfile and run:
-
-```sh
+## First run
+```bash
+git clone https://github.com/Brajesh31/Chain-Reaction-Game.git
+cd Chain-Reaction-Game
 npm ci
 npm start
 ```
 
-Create React App serves the browser game locally. The root package provides `start`, `build`, `test`, and `eject` scripts. `eject` is a one-way operation and is not needed for normal development.
+## Workflow
+1. Create a focused branch from the default branch.
+2. Reproduce the issue or define expected game behavior.
+3. Make the smallest coherent change.
+4. Add tests for rule changes.
+5. Update rules and architecture documentation.
+6. Run relevant tests and production build.
+7. Inspect the diff for secrets, generated files and unrelated edits.
+8. Open a pull request with actual verification results.
 
-## Tests and validation
+## Code organization
+- Keep app orchestration in `App.js`.
+- Keep board and cell rendering in presentation components.
+- Avoid duplicating rules in UI components.
+- Prefer pure functions for critical mass, neighbors, legal moves and cascade resolution.
+- Keep animation timing separate from rule state.
+- Use explicit row, column, player, owner and orb terminology.
 
-`src/App.test.js` is still the default Create React App test: it searches for the “learn react” link. The current app shows a game title and does not render that starter content, so the test is stale and should be replaced. The test script runs Jest through Create React App, but a successful test run should not be treated as game-rule coverage until meaningful tests exist.
-
-The `server/package.json` test command is a placeholder that deliberately exits with an error. The `server` folder currently has no tracked application source file. Do not describe it as a running server.
-
-## Project structure and conventions
-
-- `src/App.js` owns the high-level page flow and shared theme.
-- `src/components/` contains UI components and game behavior, especially `Game.js`.
-- Keep game rules consistent between engine behavior, the welcome-page text/preview, and documentation.
-- Separate future networking or persistence code behind a documented design rather than assuming the listed Socket.IO packages create it.
-- Prefer focused changes and verify visible behavior at desktop and narrow viewport sizes.
+## Tests
+`src/App.test.js` is a stale CRA sample expecting the starter “learn react” link. Replace it with game-specific tests. See [strategy](quality/testing-strategy.md) and [cases](quality/test-cases.md).
 
 ## Repository hygiene
+Do not commit node_modules, build output, coverage, editor files or local environment files. The repository currently tracks nested `server/node_modules` artifacts; ignore rules do not untrack existing files. See [repository hygiene](engineering/repository-hygiene.md).
 
-Files under `server/node_modules` are already tracked in the current repository. The root ignore file does not untrack existing files; do not add more installed dependencies, build output, or local state to commits. A future cleanup should be reviewed separately because it would remove many tracked paths. The existing `.gitignore` has been extended to ignore plain `.env` and future nested server dependency installs.
+## Secrets
+The current app needs no credentials. Never place private secrets in React source or `REACT_APP_*` variables because browser build values are public.
 
-## Credentials and browser safety
-
-No credentials are needed for the current app. Do not put secrets into `REACT_APP_*` variables or frontend source because build-time values are visible in browser assets. Do not commit local `.env`, generated builds, or user data.
+## Pull requests
+Describe behavior, add test plan and actual results, link docs, include screenshots for UI changes, and state limitations honestly.
