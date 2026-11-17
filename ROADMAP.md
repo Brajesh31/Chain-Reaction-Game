@@ -1,22 +1,32 @@
-# Roadmap
+# 🗺️ Roadmap
 
-This is a directional list for the current React game prototype. It has no delivery dates and does not promise that any item will be implemented.
+This is a directional plan for the current React game prototype. It has no delivery dates and does not promise that every proposal will be implemented.
+
+## Completed foundation
+- [x] Expand the repository handbook with product, architecture, design, security, quality and operations documentation.
+- [x] Add reusable issue, pull-request, architecture, QA, security, accessibility and release templates.
+- [x] Add editable Mermaid diagrams and repository-owned SVG illustrations.
+- [x] Add documentation-link and repository-hygiene validation.
+- [x] Remove tracked generated dependency installation artifacts.
+- [x] Extract shared pure board rules and use one critical-mass helper in the live game and setup preview.
+- [x] Add deterministic tests for critical mass, move ownership, corner/edge/interior bursts and multi-wave cascades.
+- [x] Add a cascade burst limit so a pathological cycle is rejected without freezing the browser.
+- [x] Prevent premature winner declarations before every configured player has taken an opening move.
+- [x] Skip players who have already been eliminated.
 
 ## Near-term quality work
-
-- Replace the leftover Create React App sample test with tests for turns, ownership, critical mass, cascades, and win conditions.
-- Make the rules preview use the same critical-mass values as the game engine.
-- Verify chain-reaction queue handling when one cell receives multiple orbs during a cascade.
-- Define the elimination and win rules for two, three, and four players, including the opening turns.
-- Reduce repository noise from dependency installation artifacts through a reviewed repository cleanup.
-- Add accessibility checks for keyboard operation, reduced motion, and color distinction.
+- [ ] Add complete two-, three- and four-player match integration tests.
+- [ ] Verify reset and restart behavior after a completed match.
+- [ ] Complete keyboard, screen-reader, contrast and reduced-motion testing.
+- [ ] Add browser automation for the supported viewport matrix if it can be maintained reliably.
+- [ ] Decide whether the unused nested server package should become a real backend or be removed.
 
 ## Possible future features
-
-- Save and restore local game settings or match state.
-- Add a real online multiplayer server with authoritative move validation and documented Socket.IO events.
-- Add deployment and operational guidance if a backend or hosted service is introduced.
+- Save and restore local match state.
+- Undo/replay and deterministic match history.
+- Optional AI opponents.
+- Online rooms backed by an authoritative server and documented Socket.IO protocol.
+- Persistent player accounts, ranking or hosted services only after a privacy and security design.
 
 ## Propose work
-
-Open an issue describing the player problem, expected behavior, and any compatibility or persistence effects. See [CONTRIBUTING.md](CONTRIBUTING.md). Priorities may change as the project evolves.
+Open an issue describing the player problem, expected behavior, rule impacts, acceptance criteria and test strategy. See [CONTRIBUTING.md](CONTRIBUTING.md).

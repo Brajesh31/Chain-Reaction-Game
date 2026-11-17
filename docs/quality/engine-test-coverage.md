@@ -1,16 +1,27 @@
 # 🧪 Game Engine Test Coverage
 
 ## Implemented automated coverage
-The pure rules module has tests for orthogonal neighbors at corners, edges and interior positions; invalid coordinates and dimensions; critical-mass values 2, 3 and 4; rectangular boards; legal empty/self-owned moves; rejection of opponent-owned cells, and winner suppression until all configured players have participated.
+The pure rules module has deterministic unit tests for:
+- Orthogonal neighbor geometry at corners, edges and interior positions.
+- Invalid coordinates, rectangular grids and critical-mass values 2, 3 and 4.
+- Empty, own-cell and opponent-owned move validation.
+- Immutable orb placement on a non-critical cell.
+- Corner, edge and interior burst results.
+- Multi-wave cascade resolution and ownership transfer.
+- A pathological closed-board cycle reaching the safety limit without exposing partial state.
+- Winner suppression until every configured player has made an opening move.
+- Next-player selection for unplayed, surviving and eliminated participants.
 
-## Tests still required
-- [ ] Immutable board update for a legal move.
-- [ ] Opponent target leaves the complete board unchanged.
-- [ ] Corner, edge and interior burst state.
-- [ ] Multi-wave cascade and revisited coordinate.
-- [ ] Full cascade resolution for multiple burst waves and revisited coordinates.
-- [ ] Elimination across real match sequences for two, three and four players.
-- [ ] Restart after terminal state.
-- [ ] No interaction during cascade animation.
+The App test suite covers the title screen, match setup options and rules panel.
 
-Coverage percentage alone is not a quality guarantee. Prioritize full board state, active player, terminal status and winner assertions.
+## Still required
+- [ ] Full UI integration test for legal and invalid cell clicks.
+- [ ] Full two-player match through winner announcement.
+- [ ] Full three-player match with one eliminated participant.
+- [ ] Full four-player match with multiple eliminations.
+- [ ] Reset after a completed match.
+- [ ] No interaction during delayed cascade presentation.
+- [ ] Verify player status announcements with a screen reader.
+- [ ] Reduced-motion behavior and keyboard-only board interaction.
+
+Coverage percentage alone is not a quality guarantee. Assert the full board, active player, participant list, terminal state and winner.

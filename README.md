@@ -11,7 +11,7 @@
   <img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=111827">
   <img alt="Create React App 5" src="https://img.shields.io/badge/Create%20React%20App-5.0.1-09D3AC">
   <img alt="Gameplay" src="https://img.shields.io/badge/Gameplay-Local%20Multiplayer-purple">
-  <img alt="License" src="https://img.shields.io/badge/License-MIT-blue">
+  <img alt="Documentation license" src="https://img.shields.io/badge/Docs%20License-MIT-blue">
   <img alt="CI" src="https://github.com/Brajesh31/Chain-Reaction-Game/actions/workflows/ci.yml/badge.svg">
   <img alt="Docs validation" src="https://github.com/Brajesh31/Chain-Reaction-Game/actions/workflows/docs-validation.yml/badge.svg">
 </p>
@@ -54,7 +54,8 @@ Chain Reaction is a shared-device strategy game. Two to four players take turns 
 4. One orb is transferred to each in-bounds orthogonal neighbor.
 5. Neighboring cells become owned by the player who initiated the cascade.
 6. Newly unstable cells resolve before the turn advances.
-7. The game evaluates eliminations and the match result.
+7. A bounded burst limit rejects pathological cycles without applying partial board state.
+8. A player is not eligible for elimination until taking an opening turn; eliminated players are skipped thereafter.
 
 ~~~~mermaid
 flowchart TD
@@ -131,14 +132,14 @@ Deploy the contents of build/ to a static host. Configure an SPA fallback to ind
 ├── server/                   # Legacy package manifests; no server source
 └── src/
     ├── App.js                # Screen flow and shared theme
-    └── components/
-        ├── Game.js           # Board state, turns and cascades
-        ├── Board.js          # Grid composition
-        ├── Cell.js           # Cell and orb presentation
-        ├── WelcomePage.js    # Match setup and rules preview
-        └── ...               # Controls, title and diagnostics
+    ├── components/
+    │   ├── Game.js           # UI state, turns and animation
+    │   ├── Board.js          # Grid composition
+    │   ├── Cell.js           # Cell and orb presentation
+    │   ├── WelcomePage.js    # Match setup and rules preview
+    │   └── ...               # Controls, title and diagnostics
     └── game/
-        ├── rules.js          # Shared pure board-rule helpers
+        ├── rules.js          # Pure move/cascade/player rules
         └── rules.test.js     # Deterministic rule tests
 ~~~~
 
@@ -177,7 +178,7 @@ python scripts/validate_docs.py
 python scripts/validate_repository.py
 ~~~~
 
-The shared board-rule helpers have deterministic unit tests for neighbor geometry, critical mass, move ownership and the opening participation guard. Full multi-wave cascade and endgame integration fixtures remain quality priorities. See [engine test coverage](docs/quality/engine-test-coverage.md) and [technical debt](docs/engineering/technical-debt.md).
+The shared rules module has deterministic tests for neighbor geometry, critical mass, move legality, corner/edge/interior bursts, multi-wave cascades, cycle-limit rollback, opening participation and next-player selection. Full match integration tests and accessibility verification remain open priorities. See [engine test coverage](docs/quality/engine-test-coverage.md) and [technical debt](docs/engineering/technical-debt.md).
 
 ## 🤝 Contributing
 Read [CONTRIBUTING.md](CONTRIBUTING.md), follow the [Code of Conduct](CODE_OF_CONDUCT.md), use the issue and PR templates, and update tests and documentation alongside behavior changes.
@@ -186,7 +187,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md), follow the [Code of Conduct](CODE_OF_CO
 This is a local browser game, not a security-reviewed online service. Never place secrets in frontend source or public build-time environment variables. See [SECURITY.md](SECURITY.md), [PRIVACY.md](PRIVACY.md) and the [threat model](docs/security/threat-model.md).
 
 ## 🗺️ Roadmap
-Possible future directions include a pure tested game engine, undo/replay, AI opponents, online rooms, an authoritative server and persisted match records. These are proposals, not shipped capabilities. See [ROADMAP.md](ROADMAP.md).
+Possible future directions include undo/replay, AI opponents, online rooms, an authoritative server and persisted match records. These are proposals, not shipped capabilities. See [ROADMAP.md](ROADMAP.md).
 
 ## 📄 License
 See [LICENSE](LICENSE) for repository license terms. Review third-party package and asset notices separately.

@@ -1,48 +1,39 @@
 # ⚙️ Game Engine Design
 
-## Current location
-Board state, move validation, turn progression, critical mass, cascades and winner logic currently live in `src/components/Game.js`. `Board.js` and `Cell.js` render the board.
-
-## Vocabulary
-- Board: rectangular matrix of cells.
-- Cell: position with owner and orb count.
-- Owner: player identifier, or zero for empty.
-- Active player: player allowed to move.
-- Neighbor: orthogonally adjacent cell.
-- Critical mass: number of adjacent in-bounds orthogonal cells.
-- Cascade: one move causing successive bursts.
+## Module boundaries
+- `src/game/rules.js`: pure neighbor, critical-mass, move-validation, cascade-resolution, winner and next-player functions.
+- `src/components/Game.js`: React state, UI feedback, animation timing, reset, performance display and commit of successful rule results.
+- `src/components/Board.js` and `Cell.js`: board and cell presentation.
+- `src/components/WelcomePage.js`: match setup and rules preview using the shared critical-mass helper.
 
 ## Critical-mass rule
-`criticalMass(r,c) = (r > 0) + (r < rows-1) + (c > 0) + (c < cols-1)`
+For row r, column c, board rows R and columns C:
+
+`criticalMass(r,c) = (r > 0) + (r < R-1) + (c > 0) + (c < C-1)`
 
 This yields 2 at corners, 3 on non-corner edges and 4 in the interior.
 
-## Target deterministic transition
-1. Validate board dimensions and coordinate.
-2. Validate current player and target ownership.
-3. Add one orb and assign ownership.
-4. Queue unstable coordinates.
-5. Process each burst and distribute one orb to orthogonal neighbors.
-6. Transfer neighboring cells to initiating player.
-7. Queue newly unstable neighbors.
-8. Evaluate player survival and match completion.
-9. Advance turn exactly once after cascade settles.
+## Move transaction
+1. Validate the board, coordinate, player and target ownership.
+2. Create a preview state with one orb placed.
+3. Resolve any resulting bursts on a cloned board.
+4. Read current cell values when dequeuing cascade coordinates.
+5. De-duplicate only while a coordinate is pending, allowing later re-queue.
+6. Reject a cascade that exceeds the configured burst safety limit, returning the original board.
+7. Commit the settled board only after resolution succeeds.
+8. Evaluate winner status after every configured player has participated.
+9. Select the next unplayed or surviving player.
 
 ## Invariants
-- Board dimensions remain stable during a match.
-- Orb counts are non-negative.
-- Empty cells have no player owner.
-- Invalid moves do not mutate state.
-- Only orthogonal neighbors receive explosion orbs.
-- Captures belong to initiating player.
-- Cascade processing terminates.
-- Turn advances after all pending bursts settle.
+- The input board is never mutated.
+- Board dimensions remain stable.
+- Orb counts are non-negative integers.
+- Invalid moves do not alter state or advance the turn.
+- Only orthogonal neighbors receive burst orbs.
+- Captured neighbors become owned by the initiating player.
+- Cells reached again after bursting can be processed again.
+- The turn advances only after the cascade has settled.
+- A pathological cycle is rejected instead of locking the UI.
 
-## Queue safety
-A coordinate can become unstable multiple times during a cascade. Queue logic must use current state when processing and must not drop bursts or loop indefinitely. Add fixtures for dense boards, revisited coordinates and repeated cascades.
-
-## Refactoring direction
-Extract pure deterministic rules into a module such as `src/game/engine.js` with no React imports. Keep UI components responsible for display and interaction. Capture existing behavior with tests before refactoring.
-
-## Known mismatch
-The welcome-screen threshold preview differs from engine logic. Update preview and tests in a focused change.
+## Remaining product semantics
+The current winner guard protects opening turns and next-player selection skips eliminated participants. Complete end-to-end playthrough tests are still needed for two, three and four players, including restart and long-cascade input handling.

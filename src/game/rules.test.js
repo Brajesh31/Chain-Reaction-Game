@@ -61,7 +61,7 @@ describe('resolveMove', () => {
     expect(c.grid[0][1]).toEqual({ owner: 1, count: 1 });
 
     const edge = boardOf(3, 3);
-    edge[0][1] = { owner: 2, count: 2 };
+    edge[0][1] = { owner: 1, count: 2 };
     const e = resolveMove(edge, 0, 1, 1);
     expect(e.bursts).toBe(1);
     expect(e.grid[0][1]).toEqual(empty());
@@ -125,8 +125,13 @@ describe('match progression', () => {
     expect(getWinner(playerTwoOnly, 2, [1, 2])).toBe(2);
   });
 
-  test('skips eliminated players but gives unplayed players an opening move', () => {
-    expect(getNextPlayer(playerTwoOnly, 3, 1, [1, 2])).toBe(3);
+  test('gives unplayed players an opening move and skips eliminated players', () => {
+    const playerOneOnly = [
+      [{ owner: 1, count: 1 }, { owner: 0, count: 0 }],
+      [{ owner: 0, count: 0 }, { owner: 0, count: 0 }],
+    ];
     expect(getNextPlayer(playerTwoOnly, 3, 1, [1])).toBe(2);
+    expect(getNextPlayer(playerOneOnly, 3, 1, [1, 2])).toBe(3);
+    expect(getNextPlayer(playerTwoOnly, 2, 1, [1, 2])).toBe(2);
   });
 });

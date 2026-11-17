@@ -1,42 +1,32 @@
 # 🧪 Testing Strategy
 
-## Current status
-Jest and React Testing Library are listed as dependencies. `src/App.test.js` remains the default CRA example and expects the starter “learn react” link. This does not test game rules. Do not treat it as meaningful coverage.
+## Current automated coverage
+Jest and React Testing Library are used by the frontend CI workflow. `src/game/rules.test.js` validates pure rule helpers and deterministic board transitions. `src/App.test.js` exercises the title screen, setup choices and rules panel.
 
 ## Test layers
 
-### Unit tests
-Once rules are extracted from React components, test:
-- critical mass for corner, edge and interior coordinates;
-- orthogonal neighbor enumeration;
-- legal/illegal move validation;
-- orb placement and cell ownership;
-- single-cell explosion;
-- multi-cell cascade;
-- captured-cell ownership;
-- queue processing and termination;
-- turn progression;
-- player elimination and winner detection;
-- reset initialization.
+### Pure engine unit tests
+Cover neighbor enumeration, critical mass, move legality, immutable updates, corner/edge/interior bursts, multi-wave cascade, re-queued coordinates, cycle-limit rollback, winner participation and turn progression.
 
 ### Component tests
-Verify setup selection, match start, visible active turn, valid/invalid cell interactions, reset, theme controls and accessible labels/status announcements.
+Verify accessible setup controls, selected player/grid settings, visible active turn, valid/invalid cell interactions, reset, theme controls, error feedback and status announcements.
 
 ### Integration tests
-Play complete turns over multiple cells and compare the settled board and active player with an expected state fixture.
+Play complete two-, three- and four-player sequences. Compare the settled board, participating-player list, active player, terminal state and winner against deterministic fixtures.
 
 ### Manual browser QA
-Test all player counts, board sizes, long cascades, repeated reset, theme switching, keyboard focus, reduced motion and narrow viewports.
+Test every offered grid size and player count, long cascades, reset during/after play, theme switching, keyboard focus, reduced motion, screen reader feedback and narrow viewports.
 
-## Command
+## Local commands
 ```bash
-npm test -- --watchAll=false
+npm ci
+npm test -- --watchAll=false --runInBand
+npm run build
 ```
-The current starter test may fail because it expects obsolete UI. Replace it before using the command as a quality gate.
 
 ## Quality gates
 - Every rules change has deterministic tests.
 - UI changes have component or manual verification.
-- Production build completes.
-- No secrets or dependency artifacts are introduced.
-- Docs reflect shipped behavior.
+- The production build completes.
+- No secrets or generated dependencies are introduced.
+- Documentation describes actual behavior, including known limits.
