@@ -1,7 +1,7 @@
 # 📦 Dependency Management
 
 ## Source of truth
-Root package.json and package-lock.json define the frontend dependency graph. Use npm ci in CI and clean environments.
+Root package.json and package-lock.json define the frontend dependency graph. Use npm ci in CI and clean environments. The repository validator checks root manifest/lockfile synchronization and rejects unreachable package records so stale lock entries do not remain installed.
 
 ## Change procedure
 1. Identify why the dependency is needed.
