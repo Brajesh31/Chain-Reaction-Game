@@ -183,6 +183,7 @@ Chain-Reaction-Game/
 │   │   └── README.md
 │   ├── security/
 │   │   ├── data-handling.md
+│   │   ├── data-protection.md
 │   │   ├── dependency-audit.md
 │   │   ├── dependency-security.md
 │   │   ├── frontend-security.md

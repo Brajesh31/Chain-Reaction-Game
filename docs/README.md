@@ -38,7 +38,7 @@ This handbook documents the current React local hot-seat game. It separates impl
 ## Security and privacy
 - [Security overview](security.md), [threat model](security/threat-model.md), [threat assessment](security/threat-assessment.md)
 - [Secret management](security/secret-management.md), [dependency security](security/dependency-security.md), [vulnerability management](security/vulnerability-management.md), [security testing](security/security-testing.md)
-- [Data handling](security/data-handling.md), [data protection](security/data-protection.md), [API authentication status](api-authentication.md)
+- [Data handling](security/data-handling.md), [API authentication status](api-authentication.md)
 - [Privacy](privacy.md), [retention](data-retention.md), [deletion](data-deletion.md), [cookie status](cookie-policy.md), [compliance notes](compliance.md), [legal notes](legal-considerations.md)
 
 ## Testing and operations

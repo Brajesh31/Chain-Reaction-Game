@@ -11,6 +11,7 @@ This changelog records repository documentation, engineering and tooling improve
 - GitHub issue forms, pull-request template, CI, documentation validation, CodeQL, dependency review, Dependabot and tagged-release workflow.
 - Scripts to validate local Markdown links, tracked repository hygiene and npm audit summaries.
 - A scheduled dependency-audit workflow that stores machine-readable advisories and a Markdown summary.
+- An open-source Gitleaks CLI workflow for scanning repository history without a commercial action license.
 - Accessible grid controls with named cells, ownership and orb counts, one-tab-stop keyboard navigation and live status announcements.
 - Component tests for cell accessibility and keyboard focus navigation.
 

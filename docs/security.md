@@ -8,6 +8,9 @@ The current application is a local browser game. There is no backend, API, datab
 - Game rules validate board shape, coordinates, player and cell ownership.
 - Cascade resolution has a burst ceiling.
 - CI runs CodeQL, dependency review, npm audit reporting and repository validation.
-- Secret scanning checks repository changes/history.
+- Secret scanning uses the open-source Gitleaks CLI against repository history.
 
-The project has not undergone a formal penetration test or external security audit. A successful audit workflow means a report was generated, not that all advisories were fixed. See the [threat model](security/threat-model.md), [assessment](security/threat-assessment.md) and root [SECURITY.md](../SECURITY.md).
+## Security limitations
+The project has not undergone a formal penetration test or external security audit. A successful audit workflow means a report was generated, not that all dependency advisories were fixed. Review the dependency audit artifact and [vulnerability management](security/vulnerability-management.md).
+
+See the [threat model](security/threat-model.md), [assessment](security/threat-assessment.md), [data protection](security/data-protection.md) and root [SECURITY.md](../SECURITY.md).
