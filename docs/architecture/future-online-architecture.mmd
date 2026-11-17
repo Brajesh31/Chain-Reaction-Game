@@ -1,0 +1,9 @@
+flowchart LR
+ A[Browser A] <-->|Proposed protocol| S[Future authoritative server]
+ B[Browser B] <-->|Proposed protocol| S
+ S --> V[Validate identity room turn and coordinate]
+ V --> E[Pure game engine]
+ E --> P[Broadcast authoritative state]
+ E -. optional future .-> D[(Match persistence)]
+ P --> A
+ P --> B
