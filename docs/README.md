@@ -41,6 +41,7 @@ This handbook documents the current React implementation and separates shipped b
 - [Testing strategy](quality/testing-strategy.md)
 - [Test cases](quality/test-cases.md)
 - [Engine test coverage](quality/engine-test-coverage.md)
+- [Keyboard accessibility](quality/keyboard-accessibility.md)
 - [Visual regression](quality/visual-regression.md)
 - [Test fixtures](quality/test-fixtures.md)
 - [Regression matrix](quality/regression-matrix.md)

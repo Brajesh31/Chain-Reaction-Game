@@ -1,14 +1,21 @@
 flowchart TD
- A[Select coordinate] --> B{Cell empty or owned by active player?}
- B -- No --> X[Reject without state mutation]
- B -- Yes --> C[Increment orb count]
- C --> D[Assign active owner]
- D --> E{Critical mass reached?}
- E -- No --> F[Finish move]
- E -- Yes --> G[Process unstable cell]
- G --> H[Distribute to orthogonal neighbors]
- H --> I[Transfer ownership]
- I --> J{More unstable cells?}
- J -- Yes --> G
- J -- No --> F
- F --> K[Evaluate result and advance turn]
+  A[Select cell] --> B{Board and coordinate valid?}
+  B -- No --> X[Reject and preserve board]
+  B -- Yes --> C{Empty or owned by active player?}
+  C -- No --> X
+  C -- Yes --> D[Clone board and add one orb]
+  D --> E{Critical mass reached?}
+  E -- No --> F[Return settled board]
+  E -- Yes --> G[Queue unstable coordinate]
+  G --> H[Dequeue and read latest cell state]
+  H --> I[Burst and distribute orthogonally]
+  I --> J[Transfer neighbor ownership]
+  J --> K{More unstable cells?}
+  K -- Yes --> G
+  K -- No --> L{Burst safety limit reached?}
+  L -- Yes --> X
+  L -- No --> F
+  F --> M[Record player participation]
+  M --> N{All players entered and one owner remains?}
+  N -- Yes --> W[Declare winner]
+  N -- No --> P[Select next unplayed or surviving player]

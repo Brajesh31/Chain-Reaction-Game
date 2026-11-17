@@ -26,3 +26,16 @@ h1, h2, h3, h4, h5, h6 {
 button {
   font-family: inherit;
 }
+
+
+/* Respect the operating-system reduced-motion preference across all components. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

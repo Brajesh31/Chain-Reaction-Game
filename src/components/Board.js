@@ -50,41 +50,92 @@ const BoardContainer = styled.div`
   }
 `;
 
-const Board = ({ 
-  grid, 
-  onCellClick, 
-  currentPlayer, 
+const Board = ({
+  grid,
+  onCellClick,
+  currentPlayer,
   isAnimating,
   playerColors,
   isMaximized,
   theme
 }) => {
+  const [activeCellIndex, setActiveCellIndex] = React.useState(0);
+  const cellRefs = React.useRef([]);
   if (!grid.length) return null;
 
   return (
-    <BoardContainer 
-      rows={grid.length} 
+    <BoardContainer
+      role="grid"
+      aria-label={`Game board, ${grid.length} rows by ${grid[0].length} columns`}
+      rows={grid.length}
       cols={grid[0].length}
       isMaximized={isMaximized}
       theme={theme}
     >
-      {grid.flat().map((cell, index) => {
-        const rowIndex = Math.floor(index / grid[0].length);
-        const colIndex = index % grid[0].length;
-        return (
-          <Cell
-            key={`${rowIndex}-${colIndex}`}
-            row={rowIndex}
-            col={colIndex}
-            cell={cell}
-            onClick={() => onCellClick(rowIndex, colIndex)}
-            currentPlayer={currentPlayer}
-            isAnimating={isAnimating}
-            playerColors={playerColors}
-            theme={theme}
-          />
-        );
-      })}
+      {grid.map((row, rowIndex) => (
+        <div role="row" key={`row-${rowIndex}`} style={{ display: 'contents' }}>
+          {row.map((cell, colIndex) => {
+            const index = rowIndex * grid[0].length + colIndex;
+            const moveFocus = (event) => {
+              let nextRow = rowIndex;
+              let nextCol = colIndex;
+              switch (event.key) {
+                case 'ArrowUp':
+                  nextRow = Math.max(0, rowIndex - 1);
+                  break;
+                case 'ArrowDown':
+                  nextRow = Math.min(grid.length - 1, rowIndex + 1);
+                  break;
+                case 'ArrowLeft':
+                  nextCol = Math.max(0, colIndex - 1);
+                  break;
+                case 'ArrowRight':
+                  nextCol = Math.min(grid[0].length - 1, colIndex + 1);
+                  break;
+                case 'Home':
+                  nextCol = 0;
+                  if (event.ctrlKey) nextRow = 0;
+                  break;
+                case 'End':
+                  nextCol = grid[0].length - 1;
+                  if (event.ctrlKey) nextRow = grid.length - 1;
+                  break;
+                default:
+                  return;
+              }
+              event.preventDefault();
+              const nextIndex = nextRow * grid[0].length + nextCol;
+              setActiveCellIndex(nextIndex);
+              cellRefs.current[nextIndex]?.focus();
+            };
+
+            return (
+              <div
+                role="gridcell"
+                aria-rowindex={rowIndex + 1}
+                aria-colindex={colIndex + 1}
+                key={`cell-wrapper-${rowIndex}-${colIndex}`}
+                style={{ width: '100%', height: '100%' }}
+              >
+                <Cell
+                  row={rowIndex}
+                  col={colIndex}
+                  cell={cell}
+                  onClick={() => onCellClick(rowIndex, colIndex)}
+                  onKeyDown={moveFocus}
+                  onFocus={() => setActiveCellIndex(index)}
+                  cellRef={(element) => { cellRefs.current[index] = element; }}
+                  tabIndex={activeCellIndex === index ? 0 : -1}
+                  currentPlayer={currentPlayer}
+                  isAnimating={isAnimating}
+                  playerColors={playerColors}
+                  theme={theme}
+                />
+              </div>
+            );
+          })}
+        </div>
+      ))}
     </BoardContainer>
   );
 };

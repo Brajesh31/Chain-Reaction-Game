@@ -1,0 +1,11 @@
+flowchart TD
+  T[Tab enters board] --> A[Focus active cell]
+  A --> K{Keyboard input}
+  K -- Arrow keys --> H[Move one row or column]
+  K -- Home / End --> R[First or last cell in row]
+  K -- Ctrl Home / Ctrl End --> B[First or last board cell]
+  K -- Enter / Space --> M[Activate focused cell]
+  H --> A
+  R --> A
+  B --> A
+  M --> C[Validate and resolve move]

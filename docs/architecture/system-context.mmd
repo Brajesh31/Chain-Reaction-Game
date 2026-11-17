@@ -1,8 +1,11 @@
 flowchart TB
   P[2–4 local players] --> B[One browser session]
-  B --> R[React application]
-  R --> S[In-memory React game state]
-  R --> UI[Board, cells and controls]
-  S --> E[Turn and cascade rules]
-  E --> S
-  N[No API, database or network multiplayer] -.-> R
+  B --> UI[React application]
+  UI --> S[React match and presentation state]
+  UI --> V[WelcomePage and Game screens]
+  G[Game component] --> R[src/game/rules.js]
+  R --> M[Validate and resolve move]
+  R --> W[Winner and next-player selection]
+  M --> S
+  V --> R
+  N[No API, database or online multiplayer] -.-> UI

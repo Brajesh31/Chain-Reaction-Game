@@ -1,25 +1,18 @@
 # ♿ Accessibility Guidance
 
-## Interaction requirements
-- Make each cell keyboard reachable or provide an equivalent keyboard grid model.
-- Prefer semantic controls for interactive cells.
-- Give cells labels describing row, column, owner and orb count.
-- Provide visible focus indicators.
-- Announce active-player changes, invalid moves and match completion through a suitable live region.
-- Do not rely on color alone for player ownership.
-- Respect `prefers-reduced-motion` for floating and explosion effects.
-- Check contrast in both themes.
+## Implemented interaction
+The board is exposed as an accessible grid. Each cell is a native button with an accessible name describing row, column, owner, orb count and availability. Tab enters one active cell; arrow keys navigate the grid, Home/End move within a row, and Ctrl+Home/Ctrl+End move to the first/final cell.
 
-## Grid navigation
-Consider arrow-key navigation with a roving tab index rather than requiring Tab through every cell. Document key bindings visibly.
+The active turn and winner are announced through a polite live status. Invalid moves and rejected pathological cascades are announced through an assertive alert. Cells expose an unavailable state while another player owns them or a cascade is in progress.
 
-## Review
-- [ ] Keyboard-only play
-- [ ] Logical focus order
-- [ ] Meaningful cell labels
-- [ ] Turn and result announcements
-- [ ] Non-color ownership cue
-- [ ] Reduced motion
-- [ ] Light/dark contrast
+## Motion
+The global stylesheet respects `prefers-reduced-motion: reduce` by suppressing animation and transition duration. Game rules remain deterministic and do not depend on animation timing.
 
-This is guidance for validation, not a claim that every current control already conforms.
+## Manual verification still required
+- Complete keyboard-only match from setup to winner.
+- Verify labels and live announcements using representative screen readers.
+- Ensure ownership remains distinguishable without color alone.
+- Check contrast in both themes and at 200% zoom.
+- Test reduced-motion gameplay.
+
+This documents implemented semantics and remaining checks. It is not a formal WCAG conformance statement.

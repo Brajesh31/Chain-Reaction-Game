@@ -65,9 +65,15 @@ const blastWave = keyframes`
   }
 `;
 
-const CellContainer = styled.div`
+const CellContainer = styled.button`
   width: 100%;
   height: 100%;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  appearance: none;
   background-color: #333;
   border-radius: 12px;
   display: flex;
@@ -84,10 +90,16 @@ const CellContainer = styled.div`
     0 2px 4px rgba(0, 0, 0, 0.2);
   
   &:hover {
-    background-color: ${(props) => (props.isValid ? '#444' : '#333')};
+    background-color: ${(props) => (props.$isValid ? '#444' : '#333')};
+  }
+
+  &:focus-visible {
+    outline: 3px solid #61dafb;
+    outline-offset: 3px;
+    z-index: 2;
   }
   
-  ${props => props.isExploding && css`
+  ${props => props.$isExploding && css`
     animation: ${explode} 0.5s ease-in-out;
   `}
 `;
@@ -452,7 +464,7 @@ const BlastParticle = styled.div`
   animation-play-state: ${props => props.isExploding ? 'running' : 'paused'};
 `;
 
-const Cell = ({ row, col, cell, onClick, currentPlayer, isAnimating, playerColors }) => {
+const Cell = ({ row, col, cell, onClick, currentPlayer, isAnimating, playerColors, onKeyDown, onFocus, tabIndex = 0, cellRef }) => {
   const [isExploding, setIsExploding] = useState(false);
   const [blastParticles, setBlastParticles] = useState([]);
   
@@ -462,39 +474,39 @@ const Cell = ({ row, col, cell, onClick, currentPlayer, isAnimating, playerColor
     [cell.owner, currentPlayer]
   );
   
-  // Memoize explosion handler
-  const handleExplosion = React.useCallback(() => {
-    if (cell.count > 0 && isAnimating) {
-      setIsExploding(true);
-      
-      const particles = [];
-      const particleCount = 8; // Further reduced for performance
-      const baseAngle = 360 / particleCount;
-      
-      for (let i = 0; i < particleCount; i++) {
-        const angle = baseAngle * i;
-        const distance = 75; // Fixed distance for consistent performance
-        particles.push({ 
-          angle, 
-          animationCss: createBlastParticleAnimation(angle, distance),
-          delay: i * 0.02 // Consistent delays
-        });
-      }
-      
-      setBlastParticles(particles);
-      
-      const timer = setTimeout(() => {
-        setIsExploding(false);
-        setBlastParticles([]);
-      }, 500);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [cell.count, isAnimating]);
-
   useEffect(() => {
-    handleExplosion();
-  }, [handleExplosion]);
+    if (cell.count <= 0 || !isAnimating) return undefined;
+
+    const reducedMotion = typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reducedMotion) {
+      setIsExploding(false);
+      setBlastParticles([]);
+      return undefined;
+    }
+
+    setIsExploding(true);
+    const particleCount = 8;
+    const baseAngle = 360 / particleCount;
+    const particles = Array.from({ length: particleCount }, (_, index) => {
+      const angle = baseAngle * index;
+      return {
+        angle,
+        animationCss: createBlastParticleAnimation(angle, 75),
+        delay: index * 0.02,
+      };
+    });
+
+    setBlastParticles(particles);
+    const timer = setTimeout(() => {
+      setIsExploding(false);
+      setBlastParticles([]);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [cell.count, isAnimating]);
 
   // Memoize blast effects
   const blastEffects = React.useMemo(() => {
@@ -550,18 +562,35 @@ const Cell = ({ row, col, cell, onClick, currentPlayer, isAnimating, playerColor
     return orbElements;
   }, [cell.count, cell.owner, playerColors, row, col]);
 
-  // Memoize click handler
   const handleClick = React.useCallback(() => {
-    if (!isExploding) {
-      onClick();
-    }
-  }, [onClick, isExploding]);
+    if (!isExploding && !isAnimating) onClick();
+  }, [onClick, isExploding, isAnimating]);
+
+  const handleKeyDown = React.useCallback((event) => {
+    if (onKeyDown) onKeyDown(event);
+  }, [onKeyDown]);
+
+  const cellContents = cell.count === 0
+    ? 'Empty'
+    : `Player ${cell.owner}, ${cell.count} orb${cell.count === 1 ? '' : 's'}`;
+  const availability = isValid
+    ? `Available to Player ${currentPlayer}`
+    : `Owned by Player ${cell.owner}, not available to Player ${currentPlayer}`;
+  const accessibleName = `Row ${row + 1}, column ${col + 1}. ${cellContents}. ${availability}.`;
 
   return (
-    <CellContainer 
-      onClick={handleClick} 
-      isValid={isValid} 
-      isExploding={isExploding}
+    <CellContainer
+      ref={cellRef}
+      type="button"
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      onFocus={onFocus}
+      tabIndex={tabIndex}
+      aria-label={accessibleName}
+      aria-disabled={!isValid || isAnimating || isExploding}
+      data-testid={`cell-${row}-${col}`}
+      $isValid={isValid}
+      $isExploding={isExploding}
     >
       {blastEffects}
       <OrbsContainer>
@@ -571,16 +600,4 @@ const Cell = ({ row, col, cell, onClick, currentPlayer, isAnimating, playerColor
   );
 };
 
-// Implement deep comparison for props
-const propsAreEqual = (prevProps, nextProps) => {
-  return (
-    prevProps.cell.owner === nextProps.cell.owner &&
-    prevProps.cell.count === nextProps.cell.count &&
-    prevProps.currentPlayer === nextProps.currentPlayer &&
-    prevProps.isAnimating === nextProps.isAnimating &&
-    prevProps.row === nextProps.row &&
-    prevProps.col === nextProps.col
-  );
-};
-
-export default React.memo(Cell, propsAreEqual); 
+export default React.memo(Cell);

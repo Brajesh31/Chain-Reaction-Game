@@ -245,6 +245,11 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
 
   // Update reset game to use progressive loading
   const resetGame = useCallback(async () => {
+    if (moveTimeoutRef.current) {
+      clearTimeout(moveTimeoutRef.current);
+      moveTimeoutRef.current = null;
+    }
+
     if (gridSize.rows * gridSize.cols > 64) { // Progressive loading for larger grids
       const newGrid = await initializeGridProgressively(gridSize.rows, gridSize.cols);
       setGrid(newGrid);
@@ -260,10 +265,6 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
       setGrid(newGrid);
     }
     
-    if (moveTimeoutRef.current) {
-      clearTimeout(moveTimeoutRef.current);
-      moveTimeoutRef.current = null;
-    }
     setCurrentPlayer(1);
     setMoveMessage('');
     setGameOver(false);
@@ -380,11 +381,11 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
           onToggleTheme={toggleTheme}
         />
         {gameOver ? (
-          <StatusMessage currentPlayer={winner} theme={theme}>
+          <StatusMessage role="status" aria-live="polite" aria-atomic="true" currentPlayer={winner} theme={theme}>
             {getPlayerName(winner)} wins!
           </StatusMessage>
         ) : (
-          <StatusMessage currentPlayer={currentPlayer} theme={theme}>
+          <StatusMessage role="status" aria-live="polite" aria-atomic="true" currentPlayer={currentPlayer} theme={theme}>
             {getPlayerName(currentPlayer)}'s turn
           </StatusMessage>
         )}
