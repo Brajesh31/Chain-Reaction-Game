@@ -1,6 +1,6 @@
 # 📚 Chain Reaction Documentation
 
-This handbook describes the current React game and separates implemented behavior from planned capabilities. The shipped app supports local hot-seat play, not online multiplayer.
+This handbook describes the current React implementation and clearly separates implemented behavior from future proposals. The shipped game is local hot-seat play, not online multiplayer.
 
 ## Start here
 - [Project overview](../README.md)
@@ -10,27 +10,27 @@ This handbook describes the current React game and separates implemented behavio
 - [FAQ](faq.md)
 
 ## Product and gameplay
-- [Game rules](game-rules.md)
-- [Product brief](product/project-brief.md)
+- [Project brief](product/project-brief.md)
 - [Requirements](product/requirements.md)
-- [User stories](product/user-stories.md)
+- [Feature inventory](product/feature-inventory.md)
+- [Player stories](product/user-stories.md)
 - [Use cases](product/use-cases.md)
 - [Player journeys](product/player-journeys.md)
-- [Feature inventory](product/feature-inventory.md)
+- [Game rules](game-rules.md)
 
 ## Architecture and engineering
 - [Architecture](architecture.md)
-- [Diagram index](architecture/README.md)
+- [Editable diagram index](architecture/README.md)
 - [Game engine design](engineering/game-engine.md)
 - [State model](engineering/state-model.md)
-- [Repository hygiene](engineering/repository-hygiene.md)
 - [Development standards](engineering/development-standards.md)
+- [Repository hygiene](engineering/repository-hygiene.md)
 - [API and multiplayer status](api.md)
 - [Database status](database.md)
 
 ## Quality
 - [Testing strategy](quality/testing-strategy.md)
-- [Behavior test cases](quality/test-cases.md)
+- [Test cases](quality/test-cases.md)
 - [Manual QA checklist](quality/qa-checklist.md)
 - [Definition of done](quality/definition-of-done.md)
 - [Performance guidance](quality/performance.md)
@@ -49,8 +49,8 @@ This handbook describes the current React game and separates implemented behavio
 - [Incident response](operations/incident-response.md)
 - [Troubleshooting](troubleshooting.md)
 
-## Templates
-See [template index](templates/README.md) for ADR, feature, bug, test, game-rule, security, accessibility, release, incident, PR and QA templates.
+## Reusable templates
+See [template index](templates/README.md) for ADR, feature proposal, bug, test plan, game-rule change, security, accessibility, release, incident and pull-request templates.
 
 ## Accuracy policy
-Every document must distinguish **implemented**, **partially implemented**, **planned** and **unknown**. Do not infer a working backend, persistence, authentication or multiplayer protocol from package dependencies.
+Every document must distinguish implemented, partially implemented, planned and unknown. Never infer working backend, persistence, authentication or online multiplayer from dependency declarations alone.
