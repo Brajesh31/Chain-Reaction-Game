@@ -1,0 +1,11 @@
+stateDiagram-v2
+    [*] --> Title
+    Title --> Setup: Start Game
+    Setup --> Playing: Confirm settings
+    Playing --> Resolving: Move reaches critical mass
+    Playing --> Evaluating: Move without burst
+    Resolving --> Resolving: More unstable cells
+    Resolving --> Evaluating: Queue empty
+    Evaluating --> Finished: Winner determined
+    Evaluating --> Playing: Match continues
+    Finished --> Setup: New match

@@ -1,0 +1,40 @@
+name: 🐛 Bug report
+description: Report a reproducible gameplay or interface problem.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "Search existing issues first. Never include secrets or private data."
+  - type: textarea
+    id: summary
+    attributes:
+      label: Problem
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Include setup and exact move sequence.
+      placeholder: "1. Start a two-player 6x6 match..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser, version, OS and viewport
+    validations:
+      required: true
+  - type: textarea
+    id: fixture
+    attributes:
+      label: Board fixture or screenshot
+      description: Include owner/count details and remove personal information.

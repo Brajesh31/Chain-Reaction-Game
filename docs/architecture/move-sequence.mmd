@@ -1,0 +1,21 @@
+sequenceDiagram
+    actor Player
+    participant UI as React UI
+    participant Game as Game state
+    participant Board as Board model
+    Player->>UI: Select cell
+    UI->>Game: Request move
+    Game->>Board: Validate bounds and owner
+    alt Invalid
+      Board-->>Game: Reject
+      Game-->>UI: State unchanged
+    else Valid
+      Board-->>Game: Accept
+      Game->>Board: Add orb and resolve queue
+      loop Until queue is empty
+        Board->>Board: Burst and distribute
+      end
+      Game->>Board: Evaluate eliminations
+      Game-->>UI: Commit settled state and next turn
+      UI-->>Player: Render result
+    end

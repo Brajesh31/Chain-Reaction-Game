@@ -16,41 +16,61 @@ This handbook documents the current React implementation and separates shipped b
 - [Player stories](product/user-stories.md)
 - [Use cases](product/use-cases.md)
 - [Player journeys](product/player-journeys.md)
-- [Game rules](game-rules.md)
+- [Strategy guide](product/strategy-guide.md)
+- [Balance notes](product/gameplay-balance.md)
 
 ## Architecture and engineering
 - [Architecture](architecture.md)
 - [Editable diagrams](architecture/README.md)
 - [Game engine design](engineering/game-engine.md)
+- [Cascade resolution](architecture/cascade-resolution.md)
+- [Algorithm complexity](architecture/algorithm-complexity.md)
 - [State model](engineering/state-model.md)
 - [Development standards](engineering/development-standards.md)
+- [Browser compatibility](engineering/browser-compatibility.md)
+- [Dependency management](engineering/dependency-management.md)
 - [Repository hygiene](engineering/repository-hygiene.md)
+- [Technical debt](engineering/technical-debt.md)
 - [API and multiplayer status](api.md)
 - [Database status](database.md)
 
 ## Quality
 - [Testing strategy](quality/testing-strategy.md)
 - [Test cases](quality/test-cases.md)
-- [Manual QA checklist](quality/qa-checklist.md)
+- [Test fixtures](quality/test-fixtures.md)
+- [Regression matrix](quality/regression-matrix.md)
+- [Browser matrix](quality/browser-matrix.md)
+- [Manual playtest script](quality/manual-playtest-script.md)
+- [QA checklist](quality/qa-checklist.md)
 - [Definition of done](quality/definition-of-done.md)
 - [Performance guidance](quality/performance.md)
+- [Performance testing](quality/performance-testing.md)
 - [Accessibility audit](quality/accessibility-audit.md)
 
 ## Design, security and operations
-- [Accessibility guidance](design/accessibility.md)
-- [UI guidelines](design/ui-guidelines.md)
-- [Motion guidelines](design/motion-guidelines.md)
+- [Design system](design/design-system.md)
+- [Responsive guidelines](design/responsive-guidelines.md)
+- [Interaction patterns](design/interaction-patterns.md)
+- [Accessibility](design/accessibility.md)
+- [Motion](design/motion-guidelines.md)
 - [Threat model](security/threat-model.md)
 - [Data handling](security/data-handling.md)
-- [Secure development checklist](security/secure-development.md)
+- [Frontend security](security/frontend-security.md)
+- [Dependency security](security/dependency-security.md)
 - [Deployment](deployment.md)
+- [Hosting guide](operations/deployment-hosting.md)
+- [Environment configuration](operations/environment-configuration.md)
+- [Monitoring](operations/monitoring.md)
+- [Backup and recovery](operations/backup-recovery.md)
 - [Operations runbook](operations/runbook.md)
 - [Release and rollback](operations/release-rollback.md)
 - [Incident response](operations/incident-response.md)
 - [Troubleshooting](troubleshooting.md)
 
-## Templates
-See [template index](templates/README.md) for ADR, feature, bug, test plan, game rule change, security, accessibility, release, incident and pull-request templates.
+## Visual assets and templates
+- [SVG asset catalog](assets/README.md)
+- [Screenshot capture guide](screenshots/README.md)
+- [Reusable template index](templates/README.md)
 
 ## Accuracy policy
-Every page must distinguish implemented, partially implemented, planned and unknown. Never infer a working backend, persistence, authentication or online multiplayer from dependency declarations alone.
+Every document must distinguish implemented, partially implemented, planned and unknown. Never infer a working backend, persistence, authentication or online multiplayer from dependency declarations alone.
