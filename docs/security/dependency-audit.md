@@ -3,23 +3,32 @@
 ## Purpose
 The scheduled dependency audit runs npm audit --json against the committed root lockfile, summarizes direct and transitive findings, and stores the complete JSON as a GitHub Actions artifact.
 
+## Latest verified snapshot
+
+The audit run on commit \`a046164c6588e0ea37a9e4056757178e2de814ee\` completed successfully and reported:
+
+| Severity | Count |
+|---|---:|
+| Critical | 3 |
+| High | 35 |
+| Moderate | 15 |
+| Low | 12 |
+| **Total** | **65** |
+
+The three critical packages in that report were \`proxy-addr\`, \`shell-quote\` and \`websocket-driver\`. They were transitive dependencies. See [Dependency Security](dependency-security.md) for the affected ranges and advisory links. This is the latest verified snapshot for the commit above, not a promise that a later dependency change has the same count.
+
 ## How to read the report
 - **Direct** means the package is declared in the root project manifest.
 - **Transitive** means another package in the dependency graph introduces it.
 - **Affected range** and advisory links come from npm's audit response.
 - **Fix available** is npm's suggested remediation metadata. It does not guarantee a non-breaking upgrade.
 
-The installed dependency graph is not identical to the shipped browser bundle. Development tools, test tools, and runtime packages need different exposure assessments.
-
-## Historical pre-cleanup baseline
-The npm CI install on 17 November 2026, before unused frontend networking dependencies and the empty nested server manifests were removed, reported 70 advisories: 12 low, 17 moderate, 37 high and 4 critical. This is a historical installation summary, not the current post-cleanup count. The current workflow generates the new count and exact package findings from the updated lockfile.
-
-Do not infer that each finding is exploitable in production solely from the total count.
+The installed dependency graph is not identical to the shipped browser bundle. Development tools, test tools and runtime packages need different exposure assessments.
 
 ## Workflow behavior
 The workflow runs on pushes, pull requests, a weekly schedule and manual dispatch. It is advisory-only while the legacy Create React App 5 transitive graph is triaged. It uploads:
-- npm-audit.json: complete npm audit response.
-- npm-audit-summary.md: severity and package summary.
+- \`npm-audit.json\`: complete npm audit response.
+- \`npm-audit-summary.md\`: severity and package summary.
 
 Application CI remains a separate mandatory quality gate. High and critical advisory findings still require an owner, impact assessment and remediation decision. The advisory-only workflow is not approval to ignore them.
 

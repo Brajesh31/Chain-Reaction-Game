@@ -9,7 +9,8 @@ This changelog records repository documentation, engineering and tooling improve
 - Reusable review templates for ADRs, features, bugs, tests, gameplay rules, architecture, accessibility, security, dependencies, risks, playtests, incidents and releases.
 - Mermaid architecture/state/sequence diagrams and repository-owned SVG illustrations.
 - GitHub issue forms, pull-request template, CI, documentation validation, CodeQL, dependency review, Dependabot and tagged-release workflow.
-- Scripts to validate local Markdown links, tracked repository hygiene and npm audit summaries.
+- Scripts to validate local Markdown links, tracked repository hygiene, npm manifest/lockfile synchronization, project-tree accuracy, SVG assets and npm audit summaries.
+- A repository enhancement audit mapping the requested checklist to actual files and explicit non-applicable items.
 - A scheduled dependency-audit workflow that stores machine-readable advisories and a Markdown summary.
 - An open-source Gitleaks CLI workflow for scanning repository history without a commercial action license.
 - Accessible grid controls with named cells, ownership and orb counts, one-tab-stop keyboard navigation and live status announcements.
@@ -23,7 +24,7 @@ This changelog records repository documentation, engineering and tooling improve
 - Corrected setup preview to use the same critical-mass helper as live gameplay.
 - Added reduced-motion support and cleaned up burst-animation timers.
 - Updated architecture diagrams to show the actual shared rules module and keyboard grid navigation.
-- Removed tracked `server/node_modules` artifacts. Server manifests remain, but no server application source has been added.
+- Removed tracked `server/node_modules` artifacts, empty nested server manifests and unused frontend server/network dependencies. The repository remains a frontend-only local game.
 - Fixed styled-only setup props so they are not forwarded as invalid DOM attributes.
 - Corrected the tagged-release workflow concurrency expression and grid row structure for assistive technology.
 

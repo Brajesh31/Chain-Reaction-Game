@@ -175,7 +175,7 @@ python scripts/validate_svg.py
 The rules module has deterministic tests for neighbor geometry, critical mass, move legality, bursts, cascades, cycle-limit rollback, opening participation and next-player selection. A component regression test verifies that input remains locked through cascade presentation. Full match integration tests and manual screen-reader/contrast verification remain open priorities.
 
 ## 🤝 Contributing
-Read [CONTRIBUTING.md](CONTRIBUTING.md), follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), use the issue and PR templates, and update tests/docs alongside behavior changes.
+Read [CONTRIBUTING.md](CONTRIBUTING.md), follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), use the issue and PR templates, and update tests/docs alongside behavior changes. See [AUTHORS.md](AUTHORS.md), [MAINTAINERS.md](MAINTAINERS.md), [CITATION.cff](CITATION.cff) and [asset attribution](ASSET_ATTRIBUTION.md) for ownership and attribution context.
 
 ## 🔐 Security and privacy
 This is a local browser game, not a security-reviewed online service. Never put secrets in frontend source or public build-time variables. See [SECURITY.md](SECURITY.md), [PRIVACY.md](PRIVACY.md) and the [threat model](docs/security/threat-model.md).
