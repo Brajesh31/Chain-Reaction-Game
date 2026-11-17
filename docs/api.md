@@ -1,13 +1,26 @@
-# API and Multiplayer Status
+# 🔌 API and Multiplayer Status
 
-## HTTP API
+## Current implementation
+There is no application HTTP API in the checked-in source. The game runs in the browser without application endpoint calls. Express and Socket.IO appear in package manifests, but no server entry point, route, socket handler, client connection, event contract, authentication, or room manager is present.
 
-There is no application HTTP API in the current repository. The React game runs entirely in the browser and does not call `fetch`, Axios, or an application endpoint.
+## Current supported mode
+- 2–4 players sharing one browser
+- Turn-based moves in local React state
+- No online rooms or matchmaking
+- No accounts or identity provider
+- No server persistence or public API
 
-## Socket.IO
+## Proposed future event contract
+The following names are design placeholders only, not implemented events.
 
-Socket.IO packages appear in the root and nested server manifests, but source inspection found no server entry point, event handlers, or client socket connection. No socket event names, payloads, authentication rules, or reconnect behavior can be documented as existing behavior. The game currently supports local players sharing the same browser.
+| Direction | Proposed event | Purpose |
+|---|---|---|
+| Client → server | `room:create` | Create a room |
+| Client → server | `room:join` | Join with a room code |
+| Client → server | `move:submit` | Submit a proposed coordinate |
+| Server → client | `room:state` | Deliver authoritative state |
+| Server → client | `move:rejected` | Explain an invalid move |
+| Server → client | `match:ended` | Announce final result |
 
-## Future API changes
-
-If networking is added, document each endpoint or socket event with payload schema, authorization, validation, error behavior, versioning, reconnect semantics, and server-side move validation. The server must remain authoritative for online turns and win conditions; clients should not be trusted to submit final game outcomes.
+## Requirements before networking
+Define payload schemas, authorization, player identity, turn validation, idempotency, rate limits, reconnect semantics, versioning and error codes. A client must submit a proposed move, not a trusted board snapshot or claimed winner. The server must validate and apply each move.
