@@ -4,9 +4,10 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from pathlib import Path
 
 FORBIDDEN_PARTS = ("/node_modules/", "/build/", "/coverage/")
-FORBIDDEN_NAMES = {".env", ".env.local", ".env.production", ".DS_Store"}
+FORBIDDEN_NAMES = {".env", ".env.local", ".env.development.local", ".env.test.local", ".env.production.local", ".env.production", ".env.development", ".DS_Store"}
 
 
 def validate_lockfile(root: Path) -> list[str]:
