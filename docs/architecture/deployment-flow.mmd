@@ -1,0 +1,6 @@
+flowchart LR
+ Dev[Developer] --> Install[npm ci]
+ Install --> Build[npm run build]
+ Build --> Artifacts[build static assets]
+ Artifacts --> Host[Static hosting]
+ Host --> Browser[Player browser]
