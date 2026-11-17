@@ -190,6 +190,8 @@ const getPlayerColor = (playerNumber) => {
   return PLAYER_COLORS[playerNumber] || '#ffffff';
 };
 
+const CASCADE_PRESENTATION_MS = 550;
+
 const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   // Default grid size
   const [gridSize] = useState(initialGridSize || { rows: 6, cols: 6 });
@@ -200,6 +202,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [moveMessage, setMoveMessage] = useState('');
   const moveTimeoutRef = useRef(null);
+  const initializationRunRef = useRef(0);
   const [playerCount] = useState(initialPlayerCount || 2); // Fixed for the duration of a match
   const [playersWhoHaveMoved, setPlayersWhoHaveMoved] = useState([]);
   const [showPerformanceMonitor, setShowPerformanceMonitor] = useState(false);
@@ -209,28 +212,33 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   const performanceMetricsRef = useRef(null);
   const [isMaximized, setIsMaximized] = useState(false);
 
-  // Progressive loading for large grids
-  const initializeGridProgressively = useCallback(async (rows, cols) => {
+  // Build large boards in small batches without allowing stale resets to win.
+  const initializeGridProgressively = useCallback((rows, cols, runId) => {
     setIsLoading(true);
-    
-    return new Promise(resolve => {
+
+    return new Promise((resolve) => {
       const newGrid = [];
       let currentRow = 0;
-      
+
       const processNextBatch = () => {
-        const batchSize = 4; // Process 4 rows at a time
-        const startTime = performance.now();
-        
-        for (let i = 0; i < batchSize && currentRow < rows; i++) {
-          newGrid[currentRow] = Array(cols).fill(null).map(() => ({
+        if (runId !== initializationRunRef.current) {
+          resolve(null);
+          return;
+        }
+
+        const batchSize = 4;
+        const startedAt = performance.now();
+
+        for (let i = 0; i < batchSize && currentRow < rows; i += 1) {
+          newGrid[currentRow] = Array.from({ length: cols }, () => ({
             owner: 0,
             count: 0,
           }));
-          currentRow++;
+          currentRow += 1;
         }
-        
-        renderTimeRef.current = performance.now() - startTime;
-        
+
+        renderTimeRef.current = performance.now() - startedAt;
+
         if (currentRow < rows) {
           requestAnimationFrame(processNextBatch);
         } else {
@@ -238,39 +246,44 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
           resolve(newGrid);
         }
       };
-      
+
       requestAnimationFrame(processNextBatch);
     });
   }, []);
 
-  // Update reset game to use progressive loading
   const resetGame = useCallback(async () => {
+    const runId = initializationRunRef.current + 1;
+    initializationRunRef.current = runId;
+
     if (moveTimeoutRef.current) {
       clearTimeout(moveTimeoutRef.current);
       moveTimeoutRef.current = null;
     }
 
-    if (gridSize.rows * gridSize.cols > 64) { // Progressive loading for larger grids
-      const newGrid = await initializeGridProgressively(gridSize.rows, gridSize.cols);
-      setGrid(newGrid);
+    setIsLoading(false);
+    setIsAnimating(false);
+
+    let newGrid;
+    if (gridSize.rows * gridSize.cols > 64) {
+      newGrid = await initializeGridProgressively(gridSize.rows, gridSize.cols, runId);
+      // A newer reset or component cleanup superseded this initialization.
+      if (!newGrid || runId !== initializationRunRef.current) return;
     } else {
-      const newGrid = Array(gridSize.rows)
-        .fill(null)
-        .map(() =>
-          Array(gridSize.cols).fill(null).map(() => ({
-            owner: 0,
-            count: 0,
-          }))
-        );
-      setGrid(newGrid);
+      newGrid = Array.from({ length: gridSize.rows }, () =>
+        Array.from({ length: gridSize.cols }, () => ({ owner: 0, count: 0 }))
+      );
     }
-    
+
+    if (runId !== initializationRunRef.current) return;
+
+    setGrid(newGrid);
     setCurrentPlayer(1);
     setMoveMessage('');
     setGameOver(false);
     setWinner(null);
     setPlayersWhoHaveMoved([]);
     setIsAnimating(false);
+    setIsLoading(false);
   }, [gridSize, initializeGridProgressively]);
 
   useEffect(() => {
@@ -335,7 +348,7 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
     if (result.bursts > 0) {
       setIsAnimating(true);
       setGrid(result.previewGrid);
-      moveTimeoutRef.current = setTimeout(commitMove, 300);
+      moveTimeoutRef.current = setTimeout(commitMove, CASCADE_PRESENTATION_MS);
     } else {
       commitMove();
     }
@@ -350,7 +363,12 @@ const Game = ({ initialGridSize, initialPlayerCount, theme, setTheme }) => {
   ]);
 
   useEffect(() => () => {
-    if (moveTimeoutRef.current) clearTimeout(moveTimeoutRef.current);
+    // Invalidate any in-flight progressive reset before unmounting.
+    initializationRunRef.current += 1;
+    if (moveTimeoutRef.current) {
+      clearTimeout(moveTimeoutRef.current);
+      moveTimeoutRef.current = null;
+    }
   }, []);
 
   // Get player name by number
