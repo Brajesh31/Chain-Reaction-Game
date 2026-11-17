@@ -1,6 +1,6 @@
 # 📚 Chain Reaction Documentation
 
-This handbook describes the current React implementation and clearly separates implemented behavior from future proposals. The shipped game is local hot-seat play, not online multiplayer.
+This handbook documents the current React implementation and separates shipped behavior from future proposals. The current game is local hot-seat play, not online multiplayer.
 
 ## Start here
 - [Project overview](../README.md)
@@ -20,7 +20,7 @@ This handbook describes the current React implementation and clearly separates i
 
 ## Architecture and engineering
 - [Architecture](architecture.md)
-- [Editable diagram index](architecture/README.md)
+- [Editable diagrams](architecture/README.md)
 - [Game engine design](engineering/game-engine.md)
 - [State model](engineering/state-model.md)
 - [Development standards](engineering/development-standards.md)
@@ -34,7 +34,7 @@ This handbook describes the current React implementation and clearly separates i
 - [Manual QA checklist](quality/qa-checklist.md)
 - [Definition of done](quality/definition-of-done.md)
 - [Performance guidance](quality/performance.md)
-- [Accessibility audit worksheet](quality/accessibility-audit.md)
+- [Accessibility audit](quality/accessibility-audit.md)
 
 ## Design, security and operations
 - [Accessibility guidance](design/accessibility.md)
@@ -49,8 +49,8 @@ This handbook describes the current React implementation and clearly separates i
 - [Incident response](operations/incident-response.md)
 - [Troubleshooting](troubleshooting.md)
 
-## Reusable templates
-See [template index](templates/README.md) for ADR, feature proposal, bug, test plan, game-rule change, security, accessibility, release, incident and pull-request templates.
+## Templates
+See [template index](templates/README.md) for ADR, feature, bug, test plan, game rule change, security, accessibility, release, incident and pull-request templates.
 
 ## Accuracy policy
-Every document must distinguish implemented, partially implemented, planned and unknown. Never infer working backend, persistence, authentication or online multiplayer from dependency declarations alone.
+Every page must distinguish implemented, partially implemented, planned and unknown. Never infer a working backend, persistence, authentication or online multiplayer from dependency declarations alone.
