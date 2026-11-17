@@ -813,14 +813,14 @@ const WelcomePage = ({ onEnter, theme, setTheme }) => {
         (row === 0 && col === cols - 1) ||
         (row === rows - 1 && col === 0) ||
         (row === rows - 1 && col === cols - 1)) {
-      return 1;
+      return 2;
     }
     // Edge cells (except corners)
     if (row === 0 || row === rows - 1 || col === 0 || col === cols - 1) {
-      return 2;
+      return 3;
     }
     // Center cells
-    return 3;
+    return 4;
   };
 
   const renderGridPreview = () => {
@@ -940,7 +940,7 @@ const WelcomePage = ({ onEnter, theme, setTheme }) => {
                 <RuleItem color="#4285f4" theme={theme}>
                   <h4>Board & Critical Mass</h4>
                   <ul>
-                    <li>Game is played on a grid (default 9×6)</li>
+                    <li>Game is played on a grid (default 6×6)</li>
                     <li>Critical mass equals number of adjacent cells:
                       <ul>
                         <li>Corner cells (2 adjacent): Critical mass = 2</li>
