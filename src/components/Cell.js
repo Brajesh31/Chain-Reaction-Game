@@ -412,10 +412,6 @@ const ParticleInner = styled.div`
   }
 `;
 
-}};
-  animation: ${particleWave} ${props => 3 + props.offset}s ease-in-out infinite;
-`;
-
 const BlastRing = styled.div`
   position: absolute;
   top: 50%;
