@@ -10,36 +10,34 @@ permissions:
 
 concurrency:
   group: update-readme
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout latest main
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
-      - name: Update README timestamp
+      - name: Refresh README timestamp
         run: |
           DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
           TIMESTAMP_LINE="Last updated: $DATE"
-
           if grep -q "Last updated:" README.md; then
             sed -i "s/Last updated:.*/$TIMESTAMP_LINE/" README.md
           else
             printf "\\n%s\\n" "$TIMESTAMP_LINE" >> README.md
           fi
-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add README.md
-
           if git diff --cached --quiet; then
             echo "No README changes detected."
             exit 0
           fi
-
           git commit -m "chore: update README timestamp"
-          git push origin HEAD
+          git pull --rebase origin main
+          git push origin HEAD:main
